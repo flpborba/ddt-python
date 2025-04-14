@@ -3,5 +3,7 @@
     "build": {
         "context": "..",
         "dockerfile": "Dockerfile"
-    }
+    },
+    "postCreateCommand": "(mamba shell hook --shell zsh && echo mamba activate sage) >> ~/.zshrc",
+    "remoteUser": "root"
 }
