@@ -1,3 +1,7 @@
+def test_gurobipy_installation():
+    import gurobipy
+
+
 def test_pyddlib_installation():
     import pyddlib
 
