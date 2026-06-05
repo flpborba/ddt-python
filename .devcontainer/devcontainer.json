@@ -1,0 +1,8 @@
+{
+    "name": "SageMath",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
+    "remoteUser": "sage"
+}
