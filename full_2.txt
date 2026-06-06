@@ -1,0 +1,59 @@
+Restricted license - for non-production use only - expires 2027-11-29
+Read LP format model from file models/prince_2_2_full.lp
+Reading time = 0.02 seconds
+: 1027 rows, 544 columns, 7808 nonzeros
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - "Ubuntu 24.04.4 LTS")
+
+CPU model: 13th Gen Intel(R) Core(TM) i5-1340P, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Optimize a model with 1027 rows, 544 columns and 7808 nonzeros (Min)
+Model fingerprint: 0x6d331e24
+Model has 64 linear objective coefficients
+Variable types: 0 continuous, 544 integer (544 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+01]
+  Objective range  [2e+00, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+00]
+
+Presolve removed 64 rows and 128 columns
+Presolve time: 0.01s
+Presolved: 963 rows, 416 columns, 7616 nonzeros
+Variable types: 0 continuous, 416 integer (352 binary)
+
+Root relaxation: objective 3.818806e-01, 409 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.38188    0   17          -    0.38188      -     -    0s
+H    0     0                      16.0000000    0.38188  97.6%     -    0s
+H    0     0                      10.0000000    0.38188  96.2%     -    0s
+     0     0    2.00000    0   15   10.00000    2.00000  80.0%     -    0s
+H    0     0                       8.0000000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   22    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0    3    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   32    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0    4    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   23    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0    4    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0    4    8.00000    2.00000  75.0%     -    0s
+     0     2    2.00000    0    4    8.00000    2.00000  75.0%     -    0s
+
+Cutting planes:
+  Gomory: 3
+  Cover: 18
+  Implied bound: 28
+  Clique: 3
+  MIR: 3
+  GUB cover: 2
+  Zero half: 4
+
+Explored 268 nodes (5003 simplex iterations) in 0.25 seconds (0.26 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 3: 8 10 16 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.000000000000e+00, best bound 8.000000000000e+00, gap 0.0000%
