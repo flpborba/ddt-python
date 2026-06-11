@@ -154,8 +154,16 @@ if __name__ == "__main__":
         help="PRINCE model (0-3, default: 0)"
     )
 
+    parser.add_argument(
+        "-r",
+        "--rounds",
+        type=int,
+        default=2,
+        help="number of rounds (default: 2)"
+    )
+
     args = parser.parse_args()
-    file = Path(f"./models/prince_{args.model}_2_{args.mode}.lp")
+    file = Path(f"./models/prince_{args.model}_{args.rounds}_{args.mode}.lp")
 
     model = gurobipy.read(str(file))
 
@@ -163,7 +171,6 @@ if __name__ == "__main__":
         model.optimize()
     else:
         model.Params.LazyConstraints = 1
-        model.Params.Presolve = 0
 
         model._sboxes = collect_sboxes(model)
         model._seen = set()
