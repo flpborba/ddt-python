@@ -1,0 +1,127 @@
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2831685
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
+Warning: unknown variable 'y1_0' in binary section
+Warning: unknown variable 'y1_1' in binary section
+Warning: unknown variable 'y1_2' in binary section
+Warning: unknown variable 'y1_3' in binary section
+Warning: unknown variable 'y1_4' in binary section
+Warning: unknown variable 'y1_5' in binary section
+Warning: unknown variable 'y1_6' in binary section
+Warning: unknown variable 'y1_7' in binary section
+Warning: unknown variable 'y1_8' in binary section
+Warning: unknown variable 'y1_9' in binary section
+Warning: unknown variable 'y1_10' in binary section
+Warning: unknown variable 'y1_11' in binary section
+Warning: unknown variable 'y1_12' in binary section
+Warning: unknown variable 'y1_13' in binary section
+Warning: unknown variable 'y1_14' in binary section
+Warning: unknown variable 'y1_15' in binary section
+Warning: unknown variable 'y1_16' in binary section
+Warning: unknown variable 'y1_17' in binary section
+Warning: unknown variable 'y1_18' in binary section
+Warning: unknown variable 'y1_19' in binary section
+Warning: unknown variable 'y1_20' in binary section
+Warning: unknown variable 'y1_21' in binary section
+Warning: unknown variable 'y1_22' in binary section
+Warning: unknown variable 'y1_23' in binary section
+Warning: unknown variable 'y1_24' in binary section
+Warning: unknown variable 'y1_25' in binary section
+Warning: unknown variable 'y1_26' in binary section
+Warning: unknown variable 'y1_27' in binary section
+Warning: unknown variable 'y1_28' in binary section
+Warning: unknown variable 'y1_29' in binary section
+Warning: unknown variable 'y1_30' in binary section
+Warning: unknown variable 'y1_31' in binary section
+Warning: unknown variable 'y1_32' in binary section
+Warning: unknown variable 'y1_33' in binary section
+Warning: unknown variable 'y1_34' in binary section
+Warning: unknown variable 'y1_35' in binary section
+Warning: unknown variable 'y1_36' in binary section
+Warning: unknown variable 'y1_37' in binary section
+Warning: unknown variable 'y1_38' in binary section
+Warning: unknown variable 'y1_39' in binary section
+Warning: unknown variable 'y1_40' in binary section
+Warning: unknown variable 'y1_41' in binary section
+Warning: unknown variable 'y1_42' in binary section
+Warning: unknown variable 'y1_43' in binary section
+Warning: unknown variable 'y1_44' in binary section
+Warning: unknown variable 'y1_45' in binary section
+Warning: unknown variable 'y1_46' in binary section
+Warning: unknown variable 'y1_47' in binary section
+Warning: unknown variable 'y1_48' in binary section
+Warning: unknown variable 'y1_49' in binary section
+Warning: unknown variable 'y1_50' in binary section
+Warning: unknown variable 'y1_51' in binary section
+Warning: unknown variable 'y1_52' in binary section
+Warning: unknown variable 'y1_53' in binary section
+Warning: unknown variable 'y1_54' in binary section
+Warning: unknown variable 'y1_55' in binary section
+Warning: unknown variable 'y1_56' in binary section
+Warning: unknown variable 'y1_57' in binary section
+Warning: unknown variable 'y1_58' in binary section
+Warning: unknown variable 'y1_59' in binary section
+Warning: unknown variable 'y1_60' in binary section
+Warning: unknown variable 'y1_61' in binary section
+Warning: unknown variable 'y1_62' in binary section
+Warning: unknown variable 'y1_63' in binary section
+Read LP format model from file models/prince_1_2_reduced.lp
+Reading time = 0.03 seconds
+: 739 rows, 416 columns, 2688 nonzeros
+Set parameter LazyConstraints to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - "Ubuntu 24.04.4 LTS")
+
+CPU model: 13th Gen Intel(R) Core(TM) i5-1340P, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+LazyConstraints  1
+
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
+Optimize a model with 1315 rows, 416 columns and 5120 nonzeros (Min)
+Model fingerprint: 0xa50a1357
+Model has 64 linear objective coefficients
+Variable types: 0 continuous, 416 integer (416 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+00]
+
+Presolve removed 64 rows and 64 columns
+Presolve time: 0.01s
+Presolved: 1251 rows, 352 columns, 4992 nonzeros
+Variable types: 0 continuous, 352 integer (352 binary)
+
+Root relaxation: objective 5.000000e-01, 106 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.50000    0   21          -    0.50000      -     -    0s
+H    0     0                       8.0000000    0.50000  93.8%     -    0s
+     0     0    0.50000    0   21    8.00000    0.50000  93.8%     -    0s
+     0     0    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   19    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   19    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   19    8.00000    2.00000  75.0%     -    0s
+     0     2    2.00000    0   19    8.00000    2.00000  75.0%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 4
+  Inf proof: 1
+  Zero half: 2
+  RLT: 2
+
+Explored 506 nodes (9460 simplex iterations) in 0.32 seconds (0.33 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 1: 8 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 8.000000000000e+00, best bound 8.000000000000e+00, gap 0.0000%
+
+User-callback calls 1293, time in user-callback 0.02 sec
