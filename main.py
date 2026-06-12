@@ -74,6 +74,8 @@ def add_activity_constraints(model, sboxes):
         sum_input = gurobipy.quicksum(s["x"])
         sum_output = gurobipy.quicksum(s["y"])
 
+        model.addConstr(p_sum <= sum_input + sum_output)
+
         for j in range(4):
             model.addConstr(sum_output >= s["x"][j])
             model.addConstr(sum_input >= s["y"][j])
@@ -81,24 +83,46 @@ def add_activity_constraints(model, sboxes):
     model.update()
 
 
-def hamming_dist(vars, bits):
-    return gurobipy.quicksum((1 - v) if b else v for v, b in zip(vars, bits))
-
-
-def ddt_entry(a, b):
-    if (a, b) == (0, 0):
-        return 16
-
-    val = {}
-
+def ddt_trace(a, b):
+    bits = {}
     for k in range(NBITS):
-        val[2 * k] = bool((a >> (NBITS - 1 - k)) & 1)
-        val[2 * k + 1] = bool((b >> (NBITS - 1 - k)) & 1)
+        bits[2 * k] = (a >> (NBITS - 1 - k)) & 1
+        bits[2 * k + 1] = (b >> (NBITS - 1 - k)) & 1
 
-    return int(ADD_DDT.restrict(val).value)
+    node = ADD_DDT
+    path = []
+
+    while not node.is_terminal():
+        i = node._index
+        v = bits[i]
+        path.append((i, v))
+        node = node._high if v else node._low
+
+    return path, int(node.value)
 
 
-def callback(model, where):
+def path_disagreement(sbox, path):
+    terms = []
+
+    for i, b in path:
+        var = sbox["x"][i // 2] if i % 2 == 0 else sbox["y"][i // 2]
+        terms.append((1 - var) if b else var)
+
+    return gurobipy.quicksum(terms)
+
+
+def hamming_disagreement(sbox, xv, yv):
+    terms = []
+
+    for v, b in zip(sbox["x"], xv):
+        terms.append((1 - v) if b else v)
+    for v, b in zip(sbox["y"], yv):
+        terms.append((1 - v) if b else v)
+
+    return gurobipy.quicksum(terms)
+
+
+def callback_hamming(model, where):
     if where != GRB.Callback.MIPSOL:
         return
 
@@ -111,29 +135,76 @@ def callback(model, where):
         a = int("".join(map(str, xv)), 2)
         b = int("".join(map(str, yv)), 2)
 
-        entry = ddt_entry(a, b)
+        if (a, b) == (0, 0):
+            continue
+
+        _, entry = ddt_trace(a, b)
+        key = (a, b)
+
+        if key in seen:
+            continue
+
+        seen.add(key)
 
         if entry == 0:
-            if ("bad", a, b) not in seen:
-                seen.add(("bad", a, b))
-
-                for t in model._sboxes:
-                    model.cbLazy(hamming_dist(t["x"] + t["y"], xv + yv) >= 1)
+            for t in model._sboxes:
+                model.cbLazy(hamming_disagreement(t, xv, yv) >= 1)
 
             continue
 
         P0, P1 = COST[entry]
 
-        if ("cost", a, b) not in seen:
-            seen.add(("cost", a, b))
+        for t in model._sboxes:
+            dt = hamming_disagreement(t, xv, yv)
 
+            model.cbLazy(t["p0"] - P0 + dt >= 0)
+            model.cbLazy(P0 - t["p0"] + dt >= 0)
+            model.cbLazy(t["p1"] - P1 + dt >= 0)
+            model.cbLazy(P1 - t["p1"] + dt >= 0)
+
+
+def callback_path(model, where):
+    if where != GRB.Callback.MIPSOL:
+        return
+
+    seen = model._seen
+
+    for s in model._sboxes:
+        xv = [int(round(model.cbGetSolution(v))) for v in s["x"]]
+        yv = [int(round(model.cbGetSolution(v))) for v in s["y"]]
+
+        a = int("".join(map(str, xv)), 2)
+        b = int("".join(map(str, yv)), 2)
+
+        if (a, b) == (0, 0):
+            continue
+
+        path, entry = ddt_trace(a, b)
+        key = (tuple(path), entry)
+
+        if key in seen:
+            continue
+
+        seen.add(key)
+
+        if entry == 0:
             for t in model._sboxes:
-                dt = hamming_dist(t["x"] + t["y"], xv + yv)
+                model.cbLazy(path_disagreement(t, path) >= 1)
 
-                model.cbLazy(t["p0"] - P0 + dt >= 0)
-                model.cbLazy(P0 - t["p0"] + dt >= 0)
-                model.cbLazy(t["p1"] - P1 + dt >= 0)
-                model.cbLazy(P1 - t["p1"] + dt >= 0)
+            continue
+
+        P0, P1 = COST[entry]
+
+        for t in model._sboxes:
+            dt = path_disagreement(t, path)
+
+            model.cbLazy(t["p0"] - P0 + dt >= 0)
+            model.cbLazy(P0 - t["p0"] + dt >= 0)
+            model.cbLazy(t["p1"] - P1 + dt >= 0)
+            model.cbLazy(P1 - t["p1"] + dt >= 0)
+
+
+CALLBACKS = {"hamming": callback_hamming, "path": callback_path}
 
 
 if __name__ == "__main__":
@@ -162,6 +233,14 @@ if __name__ == "__main__":
         help="number of rounds (default: 2)"
     )
 
+    parser.add_argument(
+        "-c",
+        "--cuts",
+        choices=("hamming", "path"),
+        default="hamming",
+        help="reduced-mode lazy-cut style (default: hamming)"
+    )
+
     args = parser.parse_args()
     file = Path(f"./models/prince_{args.model}_{args.rounds}_{args.mode}.lp")
 
@@ -177,4 +256,4 @@ if __name__ == "__main__":
 
         add_activity_constraints(model, model._sboxes)
 
-        model.optimize(callback)
+        model.optimize(CALLBACKS[args.cuts])
