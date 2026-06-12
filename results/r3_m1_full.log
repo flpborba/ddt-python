@@ -1,0 +1,73 @@
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2831685
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
+Read LP format model from file models/prince_1_3_full.lp
+Reading time = 0.08 seconds
+: 2500 rows, 656 columns, 15264 nonzeros
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - "Ubuntu 24.04.4 LTS")
+
+CPU model: 13th Gen Intel(R) Core(TM) i5-1340P, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
+Optimize a model with 2500 rows, 656 columns and 15264 nonzeros (Min)
+Model fingerprint: 0x53207918
+Model has 96 linear objective coefficients
+Variable types: 0 continuous, 656 integer (656 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+01]
+  Objective range  [2e+00, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+00]
+
+Presolve removed 128 rows and 128 columns
+Presolve time: 0.02s
+Presolved: 2372 rows, 528 columns, 15008 nonzeros
+Variable types: 0 continuous, 528 integer (528 binary)
+
+Root relaxation: objective 3.818806e-01, 441 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.38188    0   27          -    0.38188      -     -    0s
+H    0     0                      32.0000000    0.38188  98.8%     -    0s
+H    0     0                      26.0000000    0.38188  98.5%     -    0s
+H    0     0                      24.0000000    0.38188  98.4%     -    0s
+     0     0    2.00000    0   16   24.00000    2.00000  91.7%     -    0s
+H    0     0                      22.0000000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   24   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   27   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   20   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   20   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   21   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   18   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   18   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   25   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   24   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   15   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   15   22.00000    2.00000  90.9%     -    0s
+     0     0    2.00000    0   15   22.00000    2.00000  90.9%     -    0s
+     0     2    2.00000    0   15   22.00000    2.00000  90.9%     -    0s
+H    7    12                      18.0000000    2.18334  87.9%   116    0s
+H   58    60                      16.0000000    2.60358  83.7%   435    0s
+H   78    76                      14.0000000    2.60358  81.4%   427    0s
+  1478   329   11.26807   12  262   14.00000    8.00000  42.9%   228    5s
+
+Cutting planes:
+  Gomory: 1
+  Cover: 158
+  Clique: 6
+  MIR: 4
+  Zero half: 4
+  Mod-K: 1
+  RLT: 1
+
+Explored 3087 nodes (536442 simplex iterations) in 8.13 seconds (20.20 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 7: 14 16 18 ... 32
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.400000000000e+01, best bound 1.400000000000e+01, gap 0.0000%

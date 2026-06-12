@@ -1,12 +1,16 @@
-Restricted license - for non-production use only - expires 2027-11-29
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2831685
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
 Read LP format model from file models/prince_1_2_full.lp
-Reading time = 0.02 seconds
+Reading time = 0.08 seconds
 : 1475 rows, 416 columns, 9472 nonzeros
 Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - "Ubuntu 24.04.4 LTS")
 
 CPU model: 13th Gen Intel(R) Core(TM) i5-1340P, instruction set [SSE2|AVX|AVX2]
 Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
 
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
 Optimize a model with 1475 rows, 416 columns and 9472 nonzeros (Min)
 Model fingerprint: 0x9b908a82
 Model has 64 linear objective coefficients
@@ -61,7 +65,7 @@ Cutting planes:
   Mod-K: 1
   RLT: 3
 
-Explored 90 nodes (4742 simplex iterations) in 0.26 seconds (0.29 work units)
+Explored 90 nodes (4742 simplex iterations) in 0.30 seconds (0.29 work units)
 Thread count was 16 (of 16 available processors)
 
 Solution count 7: 8 10 14 ... 22

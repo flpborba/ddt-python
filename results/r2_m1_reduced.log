@@ -1,4 +1,7 @@
-Restricted license - for non-production use only - expires 2027-11-29
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2831685
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
 Warning: unknown variable 'y1_0' in binary section
 Warning: unknown variable 'y1_1' in binary section
 Warning: unknown variable 'y1_2' in binary section
@@ -64,19 +67,18 @@ Warning: unknown variable 'y1_61' in binary section
 Warning: unknown variable 'y1_62' in binary section
 Warning: unknown variable 'y1_63' in binary section
 Read LP format model from file models/prince_1_2_reduced.lp
-Reading time = 0.02 seconds
+Reading time = 0.05 seconds
 : 739 rows, 416 columns, 2688 nonzeros
 Set parameter LazyConstraints to value 1
-Set parameter Presolve to value 0
 Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - "Ubuntu 24.04.4 LTS")
 
 CPU model: 13th Gen Intel(R) Core(TM) i5-1340P, instruction set [SSE2|AVX|AVX2]
 Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
 
 Non-default parameters:
-Presolve  0
 LazyConstraints  1
 
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
 Optimize a model with 1283 rows, 416 columns and 4800 nonzeros (Min)
 Model fingerprint: 0xb3046a22
 Model has 64 linear objective coefficients
@@ -87,9 +89,12 @@ Coefficient statistics:
   Bounds range     [1e+00, 1e+00]
   RHS range        [1e+00, 4e+00]
 
-Variable types: 0 continuous, 416 integer (416 binary)
+Presolve removed 64 rows and 64 columns
+Presolve time: 0.00s
+Presolved: 1219 rows, 352 columns, 4672 nonzeros
+Variable types: 0 continuous, 352 integer (352 binary)
 
-Root relaxation: objective 5.000000e-01, 111 iterations, 0.00 seconds (0.00 work units)
+Root relaxation: objective 5.000000e-01, 106 iterations, 0.00 seconds (0.00 work units)
 
     Nodes    |    Current Node    |     Objective Bounds      |     Work
  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
@@ -97,22 +102,21 @@ Root relaxation: objective 5.000000e-01, 111 iterations, 0.00 seconds (0.00 work
      0     0    0.50000    0   21          -    0.50000      -     -    0s
 H    0     0                       8.0000000    0.50000  93.8%     -    0s
      0     0    0.50000    0   21    8.00000    0.50000  93.8%     -    0s
+     0     0    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   15    8.00000    2.00000  75.0%     -    0s
      0     0    2.00000    0   22    8.00000    2.00000  75.0%     -    0s
-     0     0    2.00000    0   14    8.00000    2.00000  75.0%     -    0s
-     0     0    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
-     0     0    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
-     0     0    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
-     0     0    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
-     0     2    2.00000    0   16    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   22    8.00000    2.00000  75.0%     -    0s
+     0     0    2.00000    0   22    8.00000    2.00000  75.0%     -    0s
+     0     2    2.00000    0   22    8.00000    2.00000  75.0%     -    0s
 
 Cutting planes:
-  Gomory: 3
-  Cover: 2
-  Inf proof: 7
-  Zero half: 2
-  RLT: 2
+  Gomory: 2
+  MIR: 3
+  Inf proof: 15
+  Zero half: 1
+  RLT: 1
 
-Explored 1963 nodes (42148 simplex iterations) in 0.49 seconds (0.58 work units)
+Explored 2155 nodes (52752 simplex iterations) in 0.65 seconds (0.82 work units)
 Thread count was 16 (of 16 available processors)
 
 Solution count 1: 8 
@@ -120,4 +124,4 @@ Solution count 1: 8
 Optimal solution found (tolerance 1.00e-04)
 Best objective 8.000000000000e+00, best bound 8.000000000000e+00, gap 0.0000%
 
-User-callback calls 4140, time in user-callback 0.02 sec
+User-callback calls 4625, time in user-callback 0.02 sec

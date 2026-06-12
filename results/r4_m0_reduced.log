@@ -1,0 +1,286 @@
+Set parameter WLSAccessID
+Set parameter WLSSecret
+Set parameter LicenseID to value 2831685
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
+Warning: unknown variable 'y3_0' in binary section
+Warning: unknown variable 'y3_1' in binary section
+Warning: unknown variable 'y3_2' in binary section
+Warning: unknown variable 'y3_3' in binary section
+Warning: unknown variable 'y3_4' in binary section
+Warning: unknown variable 'y3_5' in binary section
+Warning: unknown variable 'y3_6' in binary section
+Warning: unknown variable 'y3_7' in binary section
+Warning: unknown variable 'y3_8' in binary section
+Warning: unknown variable 'y3_9' in binary section
+Warning: unknown variable 'y3_10' in binary section
+Warning: unknown variable 'y3_11' in binary section
+Warning: unknown variable 'y3_12' in binary section
+Warning: unknown variable 'y3_13' in binary section
+Warning: unknown variable 'y3_14' in binary section
+Warning: unknown variable 'y3_15' in binary section
+Warning: unknown variable 'y3_16' in binary section
+Warning: unknown variable 'y3_17' in binary section
+Warning: unknown variable 'y3_18' in binary section
+Warning: unknown variable 'y3_19' in binary section
+Warning: unknown variable 'y3_20' in binary section
+Warning: unknown variable 'y3_21' in binary section
+Warning: unknown variable 'y3_22' in binary section
+Warning: unknown variable 'y3_23' in binary section
+Warning: unknown variable 'y3_24' in binary section
+Warning: unknown variable 'y3_25' in binary section
+Warning: unknown variable 'y3_26' in binary section
+Warning: unknown variable 'y3_27' in binary section
+Warning: unknown variable 'y3_28' in binary section
+Warning: unknown variable 'y3_29' in binary section
+Warning: unknown variable 'y3_30' in binary section
+Warning: unknown variable 'y3_31' in binary section
+Warning: unknown variable 'y3_32' in binary section
+Warning: unknown variable 'y3_33' in binary section
+Warning: unknown variable 'y3_34' in binary section
+Warning: unknown variable 'y3_35' in binary section
+Warning: unknown variable 'y3_36' in binary section
+Warning: unknown variable 'y3_37' in binary section
+Warning: unknown variable 'y3_38' in binary section
+Warning: unknown variable 'y3_39' in binary section
+Warning: unknown variable 'y3_40' in binary section
+Warning: unknown variable 'y3_41' in binary section
+Warning: unknown variable 'y3_42' in binary section
+Warning: unknown variable 'y3_43' in binary section
+Warning: unknown variable 'y3_44' in binary section
+Warning: unknown variable 'y3_45' in binary section
+Warning: unknown variable 'y3_46' in binary section
+Warning: unknown variable 'y3_47' in binary section
+Warning: unknown variable 'y3_48' in binary section
+Warning: unknown variable 'y3_49' in binary section
+Warning: unknown variable 'y3_50' in binary section
+Warning: unknown variable 'y3_51' in binary section
+Warning: unknown variable 'y3_52' in binary section
+Warning: unknown variable 'y3_53' in binary section
+Warning: unknown variable 'y3_54' in binary section
+Warning: unknown variable 'y3_55' in binary section
+Warning: unknown variable 'y3_56' in binary section
+Warning: unknown variable 'y3_57' in binary section
+Warning: unknown variable 'y3_58' in binary section
+Warning: unknown variable 'y3_59' in binary section
+Warning: unknown variable 'y3_60' in binary section
+Warning: unknown variable 'y3_61' in binary section
+Warning: unknown variable 'y3_62' in binary section
+Warning: unknown variable 'y3_63' in binary section
+Read LP format model from file models/prince_0_4_reduced.lp
+Reading time = 0.07 seconds
+: 2052 rows, 1088 columns, 5936 nonzeros
+Set parameter LazyConstraints to value 1
+Gurobi Optimizer version 13.0.2 build v13.0.2rc1 (linux64 - "Ubuntu 24.04.4 LTS")
+
+CPU model: 13th Gen Intel(R) Core(TM) i5-1340P, instruction set [SSE2|AVX|AVX2]
+Thread count: 8 physical cores, 16 logical processors, using up to 16 threads
+
+Non-default parameters:
+LazyConstraints  1
+
+Academic license 2831685 - for non-commercial use only - registered to fl___@protonmail.com
+Optimize a model with 3140 rows, 1088 columns and 10160 nonzeros (Min)
+Model fingerprint: 0xb8e1469a
+Model has 128 linear objective coefficients
+Variable types: 0 continuous, 1088 integer (1088 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [2e+00, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 4e+00]
+
+Presolve removed 192 rows and 192 columns
+Presolve time: 0.01s
+Presolved: 2948 rows, 896 columns, 9776 nonzeros
+Variable types: 0 continuous, 896 integer (896 binary)
+
+Root relaxation: objective 5.000000e-01, 111 iterations, 0.00 seconds (0.00 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0    0.50000    0   22          -    0.50000      -     -    0s
+     0     0    0.82273    0  102          -    0.82273      -     -    0s
+     0     0    2.00000    0  141          -    2.00000      -     -    0s
+     0     0    2.00000    0   29          -    2.00000      -     -    0s
+     0     0    2.00000    0   28          -    2.00000      -     -    0s
+     0     0    2.00000    0   28          -    2.00000      -     -    0s
+     0     0    2.00000    0   23          -    2.00000      -     -    0s
+     0     2    2.00000    0   23          -    2.00000      -     -    0s
+  1799  1521    9.01961   19  336          -    2.00000      -   102    5s
+  2229  1701   11.39053   29  330          -    2.35526      -   127   10s
+  2834  1948   38.00000   54    7          -    3.78571      -   143   15s
+  3095  2025   20.38624   42  492          -    4.00000      -   149   20s
+  3244  2106 infeasible   44               -    4.09060      -   156   25s
+  3741  2361   19.07692   48  270          -    4.86275      -   164   30s
+* 3932  2246              65      44.0000000    5.13976  88.3%   166   31s
+* 4165  2150              62      40.0000000    5.38889  86.5%   167   33s
+  4495  2106   23.69658   36  329   40.00000    5.90721  85.2%   169   36s
+  5136  2322    9.86978   24  309   40.00000    6.00000  85.0%   177   40s
+  6114  2738   13.56499   28  191   40.00000    6.98446  82.5%   178   45s
+  7008  3241   22.22135   42  327   40.00000    7.22781  81.9%   176   50s
+  7626  3576 infeasible   27        40.00000    7.56258  81.1%   180   55s
+  8035  3818   12.76539   23  326   40.00000    7.93828  80.2%   181   60s
+  9030  4231 infeasible   29        40.00000    8.64464  78.4%   183   66s
+  9703  4673    9.94077   21  540   40.00000    8.64464  78.4%   187   71s
+ 10587  5156   27.00000   43  225   40.00000    9.03083  77.4%   188   75s
+ 11444  5593   38.00000   38  130   40.00000    9.17530  77.1%   191   81s
+ 12399  5940 infeasible   41        40.00000    9.31091  76.7%   190   87s
+ 12789  5994 infeasible   29        40.00000    9.44444  76.4%   192   90s
+*12877  5737              59      38.0000000    9.45778  75.1%   191   90s
+H13548  5747                      34.0000000    9.56618  71.9%   191   97s
+ 13727  5997   27.23030   26  238   34.00000    9.56618  71.9%   192  101s
+ 14873  6249   13.83821   26  521   34.00000    9.84860  71.0%   193  108s
+ 15147  6485   16.62867   29  521   34.00000    9.86978  71.0%   195  112s
+ 15648  6743   18.35540   32  364   34.00000   10.00000  70.6%   198  116s
+ 16336  6956   18.23517   27  514   34.00000   10.00000  70.6%   198  120s
+ 17749  7401 infeasible   31        34.00000   10.09792  70.3%   200  129s
+ 18511  7735   13.01548   25  356   34.00000   10.25578  69.8%   200  133s
+ 19242  7730 infeasible   27        34.00000   10.25578  69.8%   201  139s
+ 19468  8003   11.74249   25  378   34.00000   10.29183  69.7%   201  144s
+ 20264  8186   27.20431   40  393   34.00000   10.41111  69.4%   203  150s
+ 21036  8538   22.81111   33  391   34.00000   10.62020  68.8%   204  155s
+ 21963  8747   18.54924   27  334   34.00000   10.70833  68.5%   205  162s
+ 22628  9114   13.44167   24  403   34.00000   10.77427  68.3%   205  168s
+ 23672  9401   12.20781   34  467   34.00000   10.89594  68.0%   205  175s
+ 24562  9744   18.52500   29  376   34.00000   10.99663  67.7%   208  182s
+ 25560 10041 infeasible   40        34.00000   11.09338  67.4%   210  189s
+ 26531 10418   19.38542   29  459   34.00000   11.27426  66.8%   210  198s
+ 27644 10432     cutoff   25        34.00000   11.39323  66.5%   211  206s
+H27665 10165                      32.0000000   11.39323  64.4%   211  206s
+ 27706 10431   18.83106   26  513   32.00000   11.39323  64.4%   211  215s
+ 28524 10709   17.00352   24  420   32.00000   11.48298  64.1%   212  224s
+ 29289 10969   22.64496   33  473   32.00000   11.60201  63.7%   213  233s
+ 30413 11402   16.16063   27  309   32.00000   11.71200  63.4%   214  244s
+ 31738 11652   25.26021   34  345   32.00000   11.88462  62.9%   215  254s
+ 33136 12058   20.51994   24  417   32.00000   12.00000  62.5%   215  265s
+ 34613 12319   16.04374   28  299   32.00000   12.12574  62.1%   215  276s
+ 36135 12603   24.16206   31  295   32.00000   12.27058  61.7%   216  288s
+ 37582 12770   29.11290   32  401   32.00000   12.37188  61.3%   216  300s
+ 38457 13028 infeasible   23        32.00000   12.48679  61.0%   217  313s
+ 39965 13489   19.85404   31  403   32.00000   12.59168  60.7%   217  327s
+ 41897 13850   29.00617   35  318   32.00000   12.76209  60.1%   217  344s
+ 43617 14229   26.32222   31  222   32.00000   12.86700  59.8%   218  362s
+ 45641 14507 infeasible   32        32.00000   13.07864  59.1%   217  380s
+ 47380 14890     cutoff   36        32.00000   13.22652  58.7%   218  398s
+ 49281 14935   17.34190   21  538   32.00000   13.38250  58.2%   218  417s
+ 49792 15192 infeasible   27        32.00000   13.45223  58.0%   219  435s
+ 51552 15663   16.59801   22  457   32.00000   13.56765  57.6%   219  453s
+ 53505 15916   19.93449   26  568   32.00000   13.70494  57.2%   219  470s
+ 55343 16223   27.00000   29  187   32.00000   13.86309  56.7%   219  485s
+ 57342 16383   18.66744   29  469   32.00000   13.97851  56.3%   219  500s
+ 59012 16682 infeasible   31        32.00000   14.01686  56.2%   219  516s
+ 60878 16882   20.03975   21  585   32.00000   14.17920  55.7%   219  532s
+ 62606 17118   28.33333   36  272   32.00000   14.35354  55.1%   219  547s
+ 64591 17297   22.99900   19  418   32.00000   14.51212  54.6%   219  563s
+ 66321 17448 infeasible   29        32.00000   14.59461  54.4%   220  580s
+ 67785 17583   25.25811   23  326   32.00000   14.70417  54.0%   220  596s
+ 69438 17775 infeasible   34        32.00000   14.82354  53.7%   220  611s
+ 71255 17819   25.41352   36  445   32.00000   14.97829  53.2%   220  627s
+ 72702 18055 infeasible   34        32.00000   15.05577  53.0%   221  643s
+ 74558 18081     cutoff   33        32.00000   15.17009  52.6%   221  658s
+ 76216 18140   17.33096   29  455   32.00000   15.33220  52.1%   222  674s
+ 77867 18243   27.87390   22  363   32.00000   15.47245  51.6%   222  689s
+ 79842 18268   28.56667   31  329   32.00000   15.62216  51.2%   222  704s
+ 80683 18344     cutoff   33        32.00000   15.66753  51.0%   222  719s
+ 81377 18394   19.84906   32  505   32.00000   15.67260  51.0%   222  735s
+ 82967 18522   24.72222   30  262   32.00000   15.79261  50.6%   223  750s
+ 84877 18603     cutoff   31        32.00000   15.95495  50.1%   223  765s
+ 86609 18761   19.71429   30  351   32.00000   16.06997  49.8%   223  781s
+ 88574 18789   21.01345   36  349   32.00000   16.21838  49.3%   223  796s
+ 90424 18871   27.22751   28  307   32.00000   16.34877  48.9%   223  810s
+ 92201 18976     cutoff   44        32.00000   16.47456  48.5%   223  825s
+ 93926 19156   25.15636   30  491   32.00000   16.59041  48.2%   223  840s
+ 95901 19120   19.20535   31  498   32.00000   16.69722  47.8%   222  855s
+ 97536 19268   24.53881   35  410   32.00000   16.81212  47.5%   223  871s
+ 99505 19298     cutoff   33        32.00000   16.93393  47.1%   223  886s
+ 101277 19301 infeasible   28        32.00000   17.02797  46.8%   223  901s
+ 103072 19475 infeasible   30        32.00000   17.16695  46.4%   223  915s
+ 104889 19568   21.59351   27  488   32.00000   17.26154  46.1%   222  930s
+ 106712 19696   26.00000   37  164   32.00000   17.35202  45.8%   222  945s
+ 108591 19689 infeasible   22        32.00000   17.46082  45.4%   222  960s
+ 110249 19810   20.46590   37  463   32.00000   17.53919  45.2%   222  974s
+ 112148 19730 infeasible   34        32.00000   17.64569  44.9%   222  989s
+ 113861 19660   29.26898   31  424   32.00000   17.77273  44.5%   222 1004s
+ 115455 19629     cutoff   27        32.00000   17.85874  44.2%   222 1018s
+ 117454 19488   19.97191   34  477   32.00000   17.96325  43.9%   222 1032s
+ 119146 19530 infeasible   38        32.00000   18.05845  43.6%   222 1045s
+ 120819 19416   19.86168   34  420   32.00000   18.16378  43.2%   222 1060s
+ 122620 19301     cutoff   25        32.00000   18.28611  42.9%   222 1074s
+ 124245 19333   22.17395   34  432   32.00000   18.39537  42.5%   221 1087s
+ 126107 19275   25.24000   34  281   32.00000   18.48311  42.2%   221 1102s
+ 127883 19314 infeasible   22        32.00000   18.57870  41.9%   221 1116s
+ 129713 19160     cutoff   30        32.00000   18.66667  41.7%   221 1131s
+ 131369 19190 infeasible   37        32.00000   18.79771  41.3%   221 1145s
+ 133337 19028   21.33333   30  171   32.00000   18.90024  40.9%   221 1160s
+ 135043 19036 infeasible   32        32.00000   19.02004  40.6%   221 1174s
+ 136898 18846     cutoff   37        32.00000   19.09926  40.3%   220 1188s
+ 138512 18616   23.17326   32  614   32.00000   19.20747  40.0%   220 1201s
+ 140036 18567   24.00000   38  111   32.00000   19.31626  39.6%   221 1215s
+ 141820 18361     cutoff   33        32.00000   19.40909  39.3%   220 1228s
+ 143489 18298   29.47656   31  362   32.00000   19.50000  39.1%   220 1242s
+ 145307 18117   28.72975   37  426   32.00000   19.59215  38.8%   220 1255s
+ 146800 17888 infeasible   30        32.00000   19.70031  38.4%   220 1269s
+ 148344 17755 infeasible   36        32.00000   19.78788  38.2%   220 1282s
+ 150231 17525     cutoff   29        32.00000   19.93176  37.7%   220 1296s
+ 152251 17283   26.46324   36  343   32.00000   20.02906  37.4%   219 1309s
+ 153885 17164   27.18979   44  306   32.00000   20.14732  37.0%   219 1322s
+ 155687 16888     cutoff   32        32.00000   20.23864  36.8%   219 1334s
+ 157283 16766   23.60838   24  476   32.00000   20.35380  36.4%   219 1347s
+ 159180 16516     cutoff   38        32.00000   20.42857  36.2%   218 1360s
+ 160839 16385     cutoff   37        32.00000   20.57500  35.7%   218 1372s
+ 162643 16166   25.81240   36  448   32.00000   20.68978  35.3%   218 1385s
+ 163967 15890 infeasible   37        32.00000   20.73352  35.2%   218 1397s
+ 165649 15776   25.32060   29  482   32.00000   20.91346  34.6%   218 1410s
+ 167599 15429   24.82678   34  396   32.00000   21.01537  34.3%   217 1422s
+ 169268 15275     cutoff   35        32.00000   21.13965  33.9%   217 1435s
+ 171027 14979 infeasible   33        32.00000   21.27273  33.5%   217 1447s
+ 172726 14679   24.68448   33  483   32.00000   21.39821  33.1%   217 1459s
+ 174357 14420   25.48329   32  360   32.00000   21.49714  32.8%   216 1471s
+ 176095 14247     cutoff   38        32.00000   21.67143  32.3%   216 1484s
+ 176713 13928   23.66634   30  479   32.00000   21.68586  32.2%   216 1496s
+ 178344 13657   27.77662   36  451   32.00000   21.85127  31.7%   216 1509s
+ 180746 13285   26.37391   39  389   32.00000   22.02046  31.2%   215 1521s
+ 182490 13255     cutoff   38        32.00000   22.16277  30.7%   215 1532s
+ 182738 13107   27.86157   37  390   32.00000   22.16277  30.7%   215 1543s
+ 183678 12706 infeasible   28        32.00000   22.19920  30.6%   215 1556s
+ 185362 12393   28.56375   33  420   32.00000   22.32604  30.2%   214 1569s
+ 187543 11919     cutoff   38        32.00000   22.58682  29.4%   214 1581s
+ 189519 11432   28.96939   39  301   32.00000   22.78998  28.8%   213 1593s
+ 191791 11036   28.84018   38  380   32.00000   23.02815  28.0%   213 1605s
+ 193912 10540   24.41004   32  502   32.00000   23.22889  27.4%   212 1616s
+ 195821 10164     cutoff   39        32.00000   23.40860  26.8%   211 1626s
+ 197768  9628     cutoff   45        32.00000   23.62137  26.2%   211 1637s
+ 199761  9212   29.33333   34  151   32.00000   23.85188  25.5%   210 1647s
+ 202576  8712   27.67232   39  483   32.00000   24.06612  24.8%   209 1656s
+ 204350  8189   27.40000   35  249   32.00000   24.37755  23.8%   208 1665s
+ 206358  7757 infeasible   38        32.00000   24.59664  23.1%   207 1674s
+ 208129  7191   28.20220   42  501   32.00000   24.86324  22.3%   207 1683s
+ 210155  6590 infeasible   35        32.00000   25.15789  21.4%   206 1691s
+ 212232  5916 infeasible   38        32.00000   25.43074  20.5%   205 1699s
+ 214106  5235 infeasible   36        32.00000   25.86721  19.2%   204 1708s
+ 216799  4397   27.09714   23  313   32.00000   26.08041  18.5%   202 1715s
+ 218837  3432 infeasible   36        32.00000   26.50000  17.2%   201 1722s
+ 220953  2246     cutoff   31        32.00000   26.87437  16.0%   200 1728s
+ 223108   811 infeasible   33        32.00000   27.42500  14.3%   199 1733s
+ 225412     0     cutoff   35        32.00000   29.00000  9.38%   198 1735s
+
+Cutting planes:
+  Gomory: 4
+  Lift-and-project: 5
+  Cover: 80
+  MIR: 14
+  Flow cover: 244
+  Inf proof: 303
+  Zero half: 4
+  RLT: 14
+
+Explored 226313 nodes (44578598 simplex iterations) in 1735.32 seconds (1158.02 work units)
+Thread count was 16 (of 16 available processors)
+
+Solution count 5: 32 34 38 ... 44
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 3.200000000000e+01, best bound 3.200000000000e+01, gap 0.0000%
+
+User-callback calls 650370, time in user-callback 7.98 sec
