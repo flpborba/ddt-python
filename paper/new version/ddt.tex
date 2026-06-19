@@ -29,27 +29,29 @@
 \maketitle
 
 \begin{abstract}
-The difference distribution table (DDT) is the central object of differential
-cryptanalysis, yet representing it as a dense $2^{n}\times 2^{n}$ matrix scales
-poorly: its size grows exponentially in the S-box width, and even when it fits
-in memory the cryptanalytic searches performed over it are each implemented as a
-bespoke scan. We argue that the natural abstraction for a DDT is not a matrix but
-a formal language. By recursively partitioning the table into quadrants, every
-cell is identified with a word over a quaternary alphabet, the non-zero entries
-form a regular language, and a quaternary analogue of multi-terminal
-decision-diagram reduction makes the resulting automaton canonical. Evaluated on
-the entire SageMath S-box library---$288$ S-boxes from $n=3$ to $9$---the
-representation reduces the number of stored states by a median of $5$ to
-$12\times$, and by up to $273\times$ for highly structured S-boxes, with the
-automaton verified cell-by-cell against the dense table in every case. The
-compactness is only half of the story. Once the DDT is a regular language, any
-property expressible as a regular condition over the quadrant encoding becomes a
-small query automaton, and the matching entries are obtained by a joint traversal
-that never materialises the matrix. We give a uniform query calculus, validate
-seven query families against exhaustive search, and show that the same
-construction and calculus apply verbatim to the linear approximation and
-boomerang connectivity tables, unifying differential, linear, and boomerang
-queries under a single engine.
+Differential cryptanalysis, introduced by Biham and Shamir, centers on the
+difference distribution table (DDT) of an S-box. For an $n$-bit S-box the table
+is a dense $2^{n}\times 2^{n}$ matrix, and even when it fits in memory the
+cryptanalytic tasks performed over it are each implemented as an ad-hoc scan,
+written anew for every analysis. We argue that the right abstraction for the
+DDT is not a matrix but a formal language: by recursively partitioning the table
+into quadrants, every cell is identified with a unique word over a quaternary
+alphabet $\Sigma = \{\texttt{0},\texttt{1},\texttt{2},\texttt{3}\}$, the non-zero entries form a
+regular language $L(D)$, and a quaternary analogue of multi-terminal binary
+decision diagram reduction makes the recognizing automaton canonical. The
+disparate ad-hoc scans then collapse into a single uniform recipe: any property
+definable over $\Sigma$ becomes a query automaton, intersection with $L(D)$ is
+standard, and the matching entries are recovered by a joint traversal that
+never materializes the matrix. We develop this query calculus, validate seven
+query families against exhaustive search, and show that the same construction
+and calculus apply verbatim to the linear approximation and boomerang
+connectivity tables, unifying differential, linear, and boomerang queries under
+a single engine. The representation is also compact: evaluated on the entire
+SageMath S-box library, $288$ S-boxes from $n=3$ to $9$ with every automaton
+verified cell-by-cell against the dense table, it is competitive with
+sparse-bitmap encodings on unstructured S-boxes and improves on them by up to
+an order of magnitude on highly structured ones, exactly the cases where
+queries are most valuable.
 \keywords{Differential cryptanalysis \and Difference distribution table \and
 Decision diagrams \and Finite automata \and S-box.}
 \end{abstract}
