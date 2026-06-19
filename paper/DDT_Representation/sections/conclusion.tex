@@ -1,0 +1,51 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper discussed an automaton-theoretic representation for the
+differential distribution tables. We outlined the memory constraints
+inherent in differential cryptanalysis, presented a method that reframes
+DDTs as formal languages, and proposed representing them using finite
+automata to capture structural regularities. We validated this
+representation by evaluating its memory usage across various S-boxes,
+confirming that the structural compression translates into concrete storage
+advantages over standard matrix implementations.
+
+Representing a DDT as a dense matrix provides straightforward access but
+suffers from exponential growth, becoming prohibitive for storage as S-box
+sizes increase. These constraints force researchers to limit the scope of
+their analysis, either by restricting the size of the primitives analyzed
+or by relying on simplifications and heuristics. By exploiting the
+redundancies present in typical S-boxes, we demonstrated that this tabular
+structure can be substantially compressed without any loss of data, opening
+the possibility of extending the practical boundaries of analysis.
+
+Beyond the storage gains, the central observation of this work is that the
+language-theoretic view does more than reduce memory. Once the DDT is
+expressed as a regular language, the cryptanalytic searches that an
+analyst performs over the table become operations on automata, and the
+wide range of properties that can be phrased as regular conditions over
+the quadrant encoding of $(a,b)$ are all recovered through a single
+joint traversal of the DDT automaton and a small query automaton. We
+described several such queries, covering
+fixed-input and truncated differentials, impossible differentials,
+extremal-probability entries, low-weight transitions, linearly constrained
+pairs, composite queries built by boolean closure, and
+cross-DDT comparisons. Each of these tasks, historically implemented by a
+bespoke scan of the dense table, becomes a short regular expression in the
+proposed framework and inherits the compactness of the underlying
+automaton.
+
+Several directions naturally extend the present work. The query catalogue
+can be enriched with non-regular but context-free constraints, such as
+bounded-difference balances across multiple rounds, by replacing the
+query automaton with a pushdown automaton and adapting the joint
+traversal accordingly.
+The same automaton can also serve as a generator of linear inequalities
+for MILP-based trail search, providing an alternative route to the
+modeling of S-box behavior; a careful study of the trade-off between
+automaton size and the number of generated inequalities is left to future
+work. Finally, the size of the reduced automaton itself appears to capture
+an intrinsic notion of structural regularity of an S-box, and quantifying
+the deviation between an actual DDT and its random or theoretically
+optimal counterparts via this size-based metric is a natural analytical
+follow-up.

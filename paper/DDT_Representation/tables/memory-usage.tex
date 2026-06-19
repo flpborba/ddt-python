@@ -1,0 +1,34 @@
+\begin{table}
+    \centering
+    \caption{Memory usage comparison. The ``Autom.'' column details the size of our proposed structure using the layout described in \ref{sec:automaton}. ``DDT Pract.'' assumes a standard 1-byte per cell implementation. ``DDT Theor'' represents the theoretical minimum storage assuming optimal bit-packing for even values between 0 and $\delta$.}
+    \label{tab:memory_usage}
+    \setlength{\tabcolsep}{6pt}
+
+    \begin{tabular}{lrrrrrr}
+        \toprule
+        
+        \textbf{Cipher} & $n$ & $\delta$ & $|S|$ & \textbf{Autom.} & \textbf{DDT} & \textbf{DDT} \\
+         
+         & & & & & \textbf{(Pract.)} & \textbf{(Theor.)} \\
+        
+        \midrule
+        
+        SEA              & 3 &   2 &     9 &     36 B &  64 B &      8 B \\
+        SKINNY-64        & 4 &   4 &    37 &    148 B & 256 B &    64 B \\
+        PRESENT          & 4 &   4 &    39 &    156 B & 256 B &    64 B \\
+        PRINCE           & 4 &   4 &    48 &    192 B & 256 B &    64 B \\
+        DryGASCON128     & 5 &   8 &    97 &    388 B &  1 KB &    384 B \\
+        Ascon            & 5 &   8 &   107 &    428 B &  1 KB &    384 B \\
+        Dillon           & 6 &   2 &   357 &  2,856 B &  4 KB &    512 B \\
+        WAGE             & 7 &   8 & 1,518 & 12,144 B &  16 KB &    6 KB \\
+        SKINNY-128       & 8 &  64 &   927 &  7,416 B &  64 KB &   48 KB \\
+        Camellia         & 8 &   4 & 5,389 & 43,112 B &  64 KB &   16 KB \\
+        AES              & 8 &   4 & 5,394 & 43,152 B &  64 KB &   16 KB \\
+        CLEFIA ($S_{0}$) & 8 &  10 & 5,635 & 45,080 B &  64 KB &   24 KB \\
+        Skipjack         & 8 &  12 & 5,653 & 45,224 B &  64 KB &   24 KB \\
+        Safer            & 8 & 128 & 5,657 & 45,256 B &  64 KB &   56 KB \\
+        DryGASCON256     & 9 & 130 & 4,744 & 37,952 B & 256 KB & 224 KB \\
+
+        \bottomrule
+    \end{tabular}
+\end{table}

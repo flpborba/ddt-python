@@ -1,0 +1,129 @@
+\begin{figure}[ht]
+\centering
+\resizebox{\textwidth}{!}{
+\begin{tikzpicture}[grow=down, edge from parent/.style={draw, -latex}]
+    \label{fig:sea-automaton}
+
+    \node at (0pt, 0pt) (S) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+
+    \node at (-352.5pt, -70pt) (S0) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-172.5pt, -70pt) (S1) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (7.5pt,    -70pt) (S2) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (292.5pt,  -70pt) (S3) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+
+    \node at (-405pt, -150pt) (S00) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-375pt, -150pt) (S01) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-345pt, -150pt) (S02) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-285pt, -150pt) (S03) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+
+    \node at (-225pt, -150pt) (S10) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-195pt, -150pt) (S11) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-165pt, -150pt) (S12) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-105pt, -150pt) (S13) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+
+    \node at (-45pt, -150pt) (S20) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (-15pt, -150pt) (S21) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (15pt,  -150pt) (S22) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (75pt,  -150pt) (S23) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+
+    \node at (165pt, -150pt) (S30) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (255pt, -150pt) (S31) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (345pt, -150pt) (S32) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+    \node at (405pt, -150pt) (S33) [shape=circle,draw,inner sep=1pt] {\phantom{0}};
+
+    \node at (-405pt, -230pt) (F00_3) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-375pt, -230pt) (F01_3) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-345pt, -230pt) (F02_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-315pt, -230pt) (F03_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-285pt, -230pt) (F03_2) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-255pt, -230pt) (F03_3) [shape=circle,draw,inner sep=1pt] {2};
+
+    \node at (-225pt, -230pt) (F10_3) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-195pt, -230pt) (F11_3) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-165pt, -230pt) (F12_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-135pt, -230pt) (F13_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-105pt, -230pt) (F13_2) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-75pt,  -230pt) (F13_3) [shape=circle,draw,inner sep=1pt] {2};
+
+    \node at (-45pt,  -230pt) (F20_3) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (-15pt,  -230pt) (F21_3) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (15pt,   -230pt) (F22_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (45pt,   -230pt) (F23_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (75pt,   -230pt) (F23_2) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (105pt,  -230pt) (F23_3) [shape=circle,draw,inner sep=1pt] {2};
+
+    \node at (135pt,  -230pt) (F30_0) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (165pt,  -230pt) (F30_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (195pt,  -230pt) (F30_2) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (225pt,  -230pt) (F31_0) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (255pt,  -230pt) (F31_1) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (285pt,  -230pt) (F31_2) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (315pt,  -230pt) (F32_0) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (345pt,  -230pt) (F32_2) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (375pt,  -230pt) (F32_3) [shape=circle,draw,inner sep=1pt] {2};
+    \node at (405pt,  -230pt) (F33_1) [shape=circle,draw,inner sep=1pt] {2};
+
+    \path[draw] (S) -- (S0) node [midway, above left, font=\normalsize] {0};
+    \path[draw] (S) -- (S1) node [pos=0.6, above left, font=\normalsize] {1};
+    \path[draw] (S) -- (S2) node [pos=0.6, above right, font=\normalsize] {2};
+    \path[draw] (S) -- (S3) node [midway, above right, font=\normalsize] {3};
+
+    \path[draw] (S0) -- (S00) node [pos=0.65, left, font=\normalsize] {0};
+    \path[draw] (S0) -- (S01) node [pos=0.65, left, font=\normalsize] {1};
+    \path[draw] (S0) -- (S02) node [pos=0.65, right, font=\normalsize] {2};
+    \path[draw] (S0) -- (S03) node [pos=0.65, xshift=0.5mm, right, font=\normalsize] {3};
+
+    \path[draw] (S1) -- (S10) node [pos=0.65, left, font=\normalsize] {0};
+    \path[draw] (S1) -- (S11) node [pos=0.65, left, font=\normalsize] {1};
+    \path[draw] (S1) -- (S12) node [pos=0.65, right, font=\normalsize] {2};
+    \path[draw] (S1) -- (S13) node [pos=0.65, xshift=0.5mm, right, font=\normalsize] {3};
+
+    \path[draw] (S2) -- (S20) node [pos=0.65, left, font=\normalsize] {0};
+    \path[draw] (S2) -- (S21) node [pos=0.65, left, font=\normalsize] {1};
+    \path[draw] (S2) -- (S22) node [pos=0.65, right, font=\normalsize] {2};
+    \path[draw] (S2) -- (S23) node [pos=0.65, right] {3};
+
+    \path[draw] (S3) -- (S30) node [pos=0.65, xshift=-1mm, left, font=\normalsize] {0};
+    \path[draw] (S3) -- (S31) node [pos=0.65, left, font=\normalsize] {1};
+    \path[draw] (S3) -- (S32) node [pos=0.65, right, font=\normalsize] {2};
+    \path[draw] (S3) -- (S33) node [pos=0.65, xshift=1mm, right] {3};
+
+    \path[draw] (S00) -- (F00_3) node [pos=0.7, right, font=\normalsize] {3};
+    \path[draw] (S01) -- (F01_3) node [pos=0.7, right, font=\normalsize] {3};
+    \path[draw] (S02) -- (F02_1) node [pos=0.7, right, font=\normalsize] {1};
+    \path[draw] (S03) -- (F03_1) node [pos=0.7, left, font=\normalsize] {1};
+    \path[draw] (S03) -- (F03_2) node [pos=0.7, right, font=\normalsize] {2};
+    \path[draw] (S03) -- (F03_3) node [pos=0.7, right, font=\normalsize] {3};
+
+    \path[draw] (S10) -- (F10_3) node [pos=0.7, right, font=\normalsize] {3};
+    \path[draw] (S11) -- (F11_3) node [pos=0.7, right, font=\normalsize] {3};
+    \path[draw] (S12) -- (F12_1) node [pos=0.7, right, font=\normalsize] {1};
+    \path[draw] (S13) -- (F13_1) node [pos=0.7, left, font=\normalsize] {1};
+    \path[draw] (S13) -- (F13_2) node [pos=0.7, right, font=\normalsize] {2};
+    \path[draw] (S13) -- (F13_3) node [pos=0.7, right, font=\normalsize] {3};
+
+    \path[draw] (S20) -- (F20_3) node [pos=0.7, right, font=\normalsize] {3};
+    \path[draw] (S21) -- (F21_3) node [pos=0.7, right, font=\normalsize] {3};
+    \path[draw] (S22) -- (F22_1) node [pos=0.7, right, font=\normalsize] {1};
+    \path[draw] (S23) -- (F23_1) node [pos=0.7, left, font=\normalsize] {1};
+    \path[draw] (S23) -- (F23_2) node [pos=0.7, right, font=\normalsize] {2};
+    \path[draw] (S23) -- (F23_3) node [pos=0.7, right, font=\normalsize] {3};
+
+    \path[draw] (S30) -- (F30_0) node [pos=0.7, left, font=\normalsize] {0};
+    \path[draw] (S30) -- (F30_1) node [pos=0.7, right, font=\normalsize] {1};
+    \path[draw] (S30) -- (F30_2) node [pos=0.7, right, font=\normalsize] {2};
+
+    \path[draw] (S31) -- (F31_0) node [pos=0.7, left, font=\normalsize] {0};
+    \path[draw] (S31) -- (F31_1) node [pos=0.7, right, font=\normalsize] {1};
+    \path[draw] (S31) -- (F31_2) node [pos=0.7, right, font=\normalsize] {2};
+
+    \path[draw] (S32) -- (F32_0) node [pos=0.7, left, font=\normalsize] {0};
+    \path[draw] (S32) -- (F32_2) node [pos=0.7, right, font=\normalsize] {2};
+    \path[draw] (S32) -- (F32_3) node [pos=0.7, right, font=\normalsize] {3};
+
+    \path[draw] (S33) -- (F33_1) node [pos=0.7, right, font=\normalsize] {1};
+
+\end{tikzpicture}
+}
+\caption{Unreduced automaton representation of the SEA S-box DDT.}
+\end{figure}

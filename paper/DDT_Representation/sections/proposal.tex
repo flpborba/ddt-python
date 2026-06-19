@@ -1,0 +1,48 @@
+\section{An Automaton-Theoretic Representation of DDTs}
+\label{sec:automaton}
+
+The presents a novel DDT representation using automaton theory based on the hypothesis that the derivative of functions used as S-boxes in popular ciphers are not random, but possess significant structural regularities that can be exploited for compression. We first point the fundamental limitations of representing the DDT as a dense matrix and then introduce a representation, showing the process to convert a DDT into an automaton using less storage.
+
+\subsection{Structural Redundancy in DDTs}
+\label{sec:redundancies}
+
+For an $n$-bit S-box, the representation of its DDT as a matrix requires $2^{2n}$ elements, which quickly becomes prohibitive for storage, and in-memory analysis as $n$ increases. The inefficiency of this representation is the result of two types of redundancy. The first is the general redundancy present in every DDT: because the number of distinct differential values is significantly smaller than the total number of cells, many cells have the same value. For instance, at least half of the DDT entries are always zero. The second is the specific redundancy resulting from the properties of the S-box, which manifests as the frequent repetition of small, identical patterns or blocks throughout the table.
+
+This specific redundancy is particularly visible in the DDT of the PRESENT S-box, as illustrated in Table~\ref{tab:present_ddt_blocks}. In this visualization, the table is partitioned into $2 \times 2$ blocks, and colors are assigned to each according to its frequency: higher frequency of blocks receive darker colors while less frequent blocks receive lighter ones. In this particular case, 25 out of 64 blocks in the table falls into only 3 block patterns, with the all-zero block having 11 occurrences. This provides a hint that we can use the same structure to represent a significant portion of the DDT.
+
+\input{tables/present-ddt-blocks}
+
+To capture both general and specific regularities of DDTs, we propose a method that reframes these tables as formal languages and represents them using finite automata. This approach draws from techniques used in image compression and Boolean functions representation and provides a canonical and compressed representation of a DDT.
+
+\subsection{Constructing a finite automaton from a DDT}
+
+To transform a DDT into a finite automaton, we employ techniques established in \cite{BerstelAndMorcrette} and \cite{BerstelAndNaitAbdallah}. Let $\Sigma = \{0, 1, 2, 3\}$ be a quaternary alphabet. We assign the whole matrix the empty string $\varepsilon$. Then, we partition the $2^{n} \times 2^{n}$ DDT matrix into four equal $2^{n - 1} \times 2^{n - 1}$ quadrants, assigning a distinct symbol from $\Sigma$ to each. This partitioning is applied recursively, subdividing each subsequent sub-matrix. If a sub-matrix is assigned the string $w$, its four quadrants are assigned strings $wa$ for each $a$ in $\Sigma$. This process continues until reaching the individual cells that represent the differential uniformity values. Consequently, the coordinates of each cell in the DDT are mapped to a set of strings S. The subset of $S$ comprising strings that correspond to non-zero entries of the DDT we call the language of the DDT, and denote by $L(DDT)$. Figure~\ref{fig:encoding_example} illustrates this recursive assigning scheme in detail for an $8 \times 8$ DDT. In (a), the initial DDT is first partitioned into four primary quadrants, each represented by a single symbol from $\Sigma$. This recursive subdivision is demonstrated further in (b), where each sub-quadrant is assigned a string of length two by appending symbols to the string of its containing quadrant. This partitioning reaches the individual cell level in (c), where the highlighted cell is uniquely encoded by the string \texttt{320}."
+
+\input{figures/encoding-example}
+
+Following the structural mapping, $L(DDT)$ is represented by a quaternary finite automaton where each path from the initial state to a terminal state corresponds to a word $w \in \Sigma^{n}$. In this construction, the internal states represent the sub-matrices generated during the recursive partition, while the transitions are dictated by the symbols of the alphabet $\Sigma$. Unlike standard finite automata, which only outputs 0 or 1 to either accept or reject, this automaton must output the values in the DDT. To achieve this, we define a function $f_{D} : \Sigma^{n} \to \mathbb{N}$. Consequently, the evaluation of any word $w \in \Sigma^{n}$ not only verifies if the corresponding differential is possible but also returns its number of occurrences.
+
+To optimize storage, minimization is necessary. But since standard automata evaluate to 0 or 1 only, classical minimization algorithms cannot be directly applied; otherwise, they would merge accept states that refer to different values in the DDT. Specifically, we draw upon the relationship between finite automata and decision diagrams \cite{KimuraAndClarke1990} and multi-terminal binary decision diagrams, which extend standard binary decision diagrams by allowing arbitrary integer terminals \cite{FujitaEtAl1997}. By combining these concepts, we create a quaternary variant of a multi-terminal decision diagram to represent and minimize our automaton.
+
+The compression process corresponds directly to the reductions of this decision diagram, which is achieved by eliminating redundant vertices and duplicate subgraphs. Because our alphabet contains four symbols, we modify traditional binary decision diagrams \cite{Bryant1986} to accommodate our quaternary format. First, each internal node $v$ possesses four children instead of two, denoted $E_{i}(v)$ for $1 \leq i \leq 4$. Second, we modify two rules used to assign a repeated identifier to a node $v$, deeming it redundant:
+
+\begin{enumerate}
+    \item If all of its four children have the same identifier, that is, $id(E_{i}(v)) = id(E_{j}(v))$ for all $1 \leq i < j \leq 4$, we set $id(v) = id(E_{1}(v))$.
+    
+    \item If there exists a node $u$ such that the corresponding children of $u$ and $v$ have the same identifier, that is, $id(E_{i}(u)) = id(E_{i}(v))$ for all $1 \leq i \leq 4$, we set $id(v) = id(u)$.
+\end{enumerate}
+
+Given the equivalence between finite automata and decision diagrams, applying these reduction rules yields a compressed structure. While the resulting finite automaton is not minimal in the standard sense, it is minimal and canonical within our context. The final step of the compression is to remove the strings corresponding to redundant accept states from the function table. This leaves exactly one entry for each distinct value present in the DDT.
+
+To illustrate this construction and minimization process, we use the 3-bit S-box of the SEA cipher. The corresponding DDT is shown in Table~\ref{tbl:sea-ddt}. Because this S-box is an APN function, its only possible non-zero differential value is 2. Note that the trivial differential at coordinate $(0,0)$ is treated as having a value of 0, rather than $2^{3}$. Since this transition is irrelevant for differential cryptanalysis, overriding its value increases the sparsity of the matrix and optimizes the resulting automaton.
+
+\input{tables/sea-ddt}
+
+Following the structural mapping, the uncompressed quaternary finite automaton representing this DDT is depicted in Figure~\ref{fig:sea-automaton}. This initial automaton explicitly encodes all 28 valid paths to non-zero cells. Because of its size, the corresponding function table $f_{D} : \Sigma^{3} \to \mathbb{N}$, which maps each of these 28 strings to the value 2, is omitted.
+
+\input{figures/sea-automaton}
+
+Applying the quaternary reduction rules to this structure removes the repetitive blocks. For instance, in the first level of the automaton, the transitions on symbols \texttt{0}, \texttt{1}, and \texttt{2} are grouped together because their corresponding sub-matrices share an identical structure, immediately sparing half the necessary storage. At the terminal level, only a single accept state is required to represent the differential value 2. The final reduced automaton, shown in Figure~\ref{fig:sea-reduced-automaton}, contains only 8 states, a substantial compression compared to the 64 cells of the original matrix. The function table for $f_{D}$ now contains a single entry mapping the string $\texttt{003}$, corresponding to the only accept state, to the value 2.
+
+\input{figures/sea-reduced-automaton}
+

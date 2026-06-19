@@ -1,0 +1,16 @@
+\section{Results}
+\label{sec:results}
+
+We evaluated the proposed representation using S-boxes of different sizes from widely used ciphers and vectorial Boolean functions, ranging from $n = 3$ to $n = 8$. For each, we measured the size of the resulting automata compared to the raw table.
+
+\input{tables/compression-results}
+
+Table~\ref{tab:compression_results} compares the number of cells in the DDT with the number of states and transitions of our automaton for each S-box. The compression capability is noticeable even for small S-boxes ($n \leq 4$), where the number of states is approximately 5.4 to 8 times smaller than the number of cells. As the size of the S-box increase, this rate also tends to increase, ranging from 9.7 up to 12.2. There are also some S-boxes, like SKINNY-128 and DryGASCON256, in which the rates are much higher (71 and 55.3, respectively), which is a clear signal of their structural regularities. This substantial reduction in the number of required elements suggests a corresponding decrease in practical storage requirements, which we analyze next.
+
+To assess the practical efficiency of this representation, we define a memory layout for the automaton. We assume a contiguous array structure where each state is represented by four fields, corresponding to the transitions for each symbol in the alphabet. Each field stores the index of the next state, with the index 0 reserved to represent the dead state. Moreover, we utilize the bytes allocated to accepting states to store the differential value directly, as these have no outgoing transitions. The size of the transition indices depends on the total number of states $|S|$. If $|S| \leq 255$, 1-byte indices are sufficient, resulting in a state size of 4 bytes. If $255 < |S| \leq 65,535$, we require 2-byte indices, increasing the state size to 8 bytes. This compact layout allows us to calculate the precise memory footprint for each S-box.
+
+\input{tables/memory-usage}
+
+Table~\ref{tab:memory_usage} details the memory usage, comparing our proposed representation, in column ``Autom.'', against a standard practical DDT implementation, in column ``DDT Pract.'', that allocates 1 byte per cell. To provide a lower bound for comparison, we also include the ``DDT Theor.'' column, which represents the theoretical minimum storage required. This model assumes an optimal bit-packing strategy that stores only the bits necessary to represent distinct even values between $0$ and $\delta$. Specifically, the total size is calculated as $2^{2n} \times \lceil \log_{2}(\delta / 2 + 1) \rceil$ bits. For example, APN functions like those by Dillon et al. would theoretically require only 1 bit per cell, while the Safer S-box requires 7 bits.
+
+The results in Table~\ref{tab:memory_usage} confirm that the automaton's structural compression translates into memory savings. For SKINNY-128 ($n=8$), the standard DDT requires 64 KB, while our automaton requires only around 7.4 KB. Even for S-boxes with higher differential uniformity like Safer, the automaton representation remains more compact than the practical byte-aligned DDT.

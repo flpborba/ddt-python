@@ -1,0 +1,78 @@
+\section{Preliminaries}
+\label{sec:preliminaries}
+
+This section establishes the concepts and notation used throughout this work, covering the relevant properties of differential cryptanalysis, finite automata, and decision diagrams.
+
+\subsection{Differential Cryptanalysis}
+
+Differential cryptanalysis is a powerful statistical attack proposed for breaking iterated block ciphers. Introduced by Biham and Shamir \cite{BihamAndShamir1991}, it analyzes how the difference between two input plaintexts behaves along the steps in the encryption process, exploiting input changes that produce certain output changes with high probability. The initial attack analyzed the structure of the cipher to find high probable differential paths or characteristics throughout the encryption process up to the last round with the intention to use this information to guess the subkey. Over time, this foundational concept has been expanded into several advanced variants, including truncated, higher-order, and impossible differential cryptanalysis.
+
+To construct these differential characteristics, also known as differential trails, an analyst must first determine the frequencies of all possible differences propagating through the cipher's individual components. Formally, we define a pair $(a, b) \in \mathbb{F}_{2}^{n} \times \mathbb{F}_{2}^{m}$ of input and output differences as a differential and represent this relationship using the derivative of a vectorial Boolean  $F : \mathbb{F}_{2} ^{n} \to \mathbb{F}_{2}^{m}$, which calculates the output difference resulting from two inputs with a difference $a$:
+
+\begin{equation}
+    \label{eq:derivative}
+    D_{a}F(x) = F(x + a) + F(x).
+\end{equation}
+
+The function $F$ typically represents a specific cipher component, such as an S-box or a round function, though it can denote any step in the encryption process.  By evaluating this derivative across all possible inputs $x$ for a fixed input difference $a$, we determine the frequency of each resulting output difference $b$. Cataloging these frequencies for every possible difference pair yields a table that completely summarizes the component's differential behavior.
+
+\begin{definition}[Difference Distribution Table]
+    Let $F$ be a vectorial Boolean Function from $\mathbb{F}_{2}^{n}$ to $\mathbb{F}_{2}^{m}$. The difference distribution table of $F$ is a $2^n \times 2^m$ matrix where the entry at row $a \in \mathbb{F}_{2^n}$ and column $b \in \mathbb{F}_{2^m}$ is defined as:
+
+    \begin{equation}
+        DDT_{F}[a, b] = \big|\{x \in \mathbb{F}_{2^n} \mid D_{a}F(x) = b\}\big|.
+    \end{equation}
+\end{definition}
+
+From the DDT, an analyst can observe and calculate several properties that quantify a cipher's overall security and assist in crafting attacks. Among these properties, the most prominent and widely studied metric is the differential uniformity, in Definition 
+\ref{def:differential-uniformity}. This measure represents the highest frequency of occurrence for any non-trivial differential, that is, a differential where the initial input difference is strictly non-zero. In the context of a DDT, this uniformity is readily identifiable by locating the maximum value present within the table. This peak value determines the upper bound of an attacker's success probability, and so low differential uniformity is often a primary design goal for cryptographic components.
+
+\begin{definition}[Differential Uniformity]
+    \label{def:differential-uniformity}
+
+    Let $F$ be a vectorial Boolean function from $\mathbb{F}_{2}^{n}$ to $\mathbb{F}_{2}^{m}$. The differential uniformity of $F$, denoted by $\Delta(F)$, is the maximum number of values $x \in \mathbb{F}_{2}^{n}$ such that the derivative of $F$ with respect to $a$ in $x$ equals $b$, for some fixed values $a \ne 0 \in \mathbb{F}_{2}^{n}$ and $b \in \mathbb{F}_{2}^{m}$
+
+    \begin{equation}
+        \Delta(F) = \max_{a \ne 0, b \in \mathbb{F}_{2}^{n}} \big| \{x \in \mathbb{F}_{2}^{n} : D_{a}F(x) = b\} \big|.
+    \end{equation}
+\end{definition}
+
+However, differential uniformity is not the sole indicator of cryptographic security. Functions optimized exclusively for this metric often correspond to mathematical objects possessing strong algebraic structures, which can introduce alternative vulnerabilities. Such weaknesses have been exploited in various attacks, such as \cite{JakobsenAndKnudsen1997}, \cite{CourtoisAndPieprzyk2002}, and \cite{CanteautAndVideu2002}. Consequently, a cipher's resistance is affected by a broader range of differential properties. An example is the differential spectrum. While the differential uniformity isolates the single maximum frequency value, the differential spectrum provides a distribution of all entries in the table.
+
+\begin{definition}[Differential spectrum]
+    \label{def:differential-spectrum}
+
+    Let $F$ be a vectorial Boolean function. The differential spectrum of $F$ is the multiset of values
+
+    \begin{equation*}
+        \big| \{ x \in \mathbb{F}_{2}^{n} \mid D_{a}F(x) = b \} \big|
+    \end{equation*}
+    over all $a \neq 0 \in \mathbb{F}_{2}^{n}$ and $b \in \mathbb{F}_{2}^{m}$. The elements in this multiset are represented by $\omega_{i}$, where each $\omega_{i}$ denotes the number of non-trivial differentials $(a, b)$ that occur $i$ times in $F$.
+\end{definition}
+
+Additionally, the table reveals other features of the component represented, such as impossible differentials, which are pairs of input and output differences that never occur, corresponding to the zero entries in the table. To efficiently analyze these specific paths, analysts often use a *-DDT. Unlike a conventional DDT that records the exact frequency of every differential, a *-DDT acts as a boolean matrix that indicates only whether a transition is possible or impossible. From an attacker's perspective, these impossible transitions serve as a powerful filtering mechanism. In an impossible differential attack, the cryptanalyst guesses parts of the key and partially decrypts the ciphertexts; if a guessed subkey leads to a difference transition that is known to be impossible, that subkey is proven incorrect and discarded.
+
+\subsection{Binary Decision Diagrams}
+
+The efficient representation of Boolean functions is a fundamental problem. Because truth tables grow exponentially with the number of variables, graph-based data structures known as binary decision diagrams, or BDDs, were developed to offer a more compact alternative. While initial concepts were proposed by Lee \cite{Lee1959} and Akers \cite{Akers1978}, it was Bryant who introduced strict variable ordering and reduction rules, establishing BDDs as a practical and canonical representation.
+
+\begin{definition}[Binary Decision Diagram]
+\label{def:state-equivalence}
+    A Binary Decision Diagram is a rooted, directed acyclic graph with a vertex set $V$ partitioned into non-terminal and terminal vertices. Each non-terminal vertex $v \in V$ is has an attribute $\operatorname{index}(v)$ in $\mathbb{N}$ and has two child vertices, denoted as $\operatorname{low}(v)$ and $\operatorname{high}(v)$. Each terminal vertex $u \in V$ is labeled by a Boolean value $\operatorname{value}(u) \in \{0, 1\}$.
+\end{definition}
+
+Evaluating a Boolean function with a BDD involves traversing the graph from the root to a terminal vertex. Given a decision diagram representing a function $f(x_{1}, x_{2}, \dots, x_{n})$, the traversal begins at the root and, at each non-terminal vertex $v$ with $\operatorname{index}(v) = i$, the path advances to $\operatorname{low}(v)$ if its associated variable $x_{i}$ is $0$, and to $\operatorname{high}(v)$ otherwise. This process continues until a terminal node $u$ is reached, at which point the BDD yields $\operatorname{value}(u)$ as the final output of the function.
+
+Although a standard BDD provides a valid model for Boolean functions, it is neither canonical nor minimal. The exact structure of the graph is highly dependent on the evaluation order, meaning the same function can yield different representations. To resolve these inefficiencies, Bryant \cite{Bryant1986} introduced reduced ordered binary decision diagrams, or ROBDDs. This data structure provides a compact, canonical form that enables efficient algorithmic manipulation by imposing a strict variable ordering alongside reduction rules.
+
+\begin{definition}[Reduced Ordered Binary Decision Diagram]
+A BDD is ordered if there exists a strict total ordering over the set of variables such that for every non-terminal vertex $v$, the variables of its non-terminal children $\operatorname{low}(v)$ and $\operatorname{high}(v)$ strictly follow $\operatorname{index}(v)$ in the ordering. It is reduced if it satisfies two conditions: (1) it contains no vertex $v$ where $\operatorname{low}(v) = \operatorname{high}(v)$, and (2) it contains no distinct vertices $u$ and $v$ such that the subgraphs rooted at these vertices are isomorphic.
+\end{definition}
+
+The strict variable ordering combined with the reduction rules transforms the BDD into a canonical and minimal representation. This canonical property guarantees that equivalent Boolean functions will map to the exact same graph. Moreover, minimality allows complex data to be represented with significant storage efficiency.
+
+A limitation of the previous representations is the restriction of terminal nodes to {0, 1}. While suitable for Boolean logic, representing general integer-valued matrices requires a broader range of values. A multi-terminal binary decision diagram, or MTBDD, proposed by Fujita et al. \cite{FujitaEtAl1997}, addresses this by allowing terminal nodes to take arbitrary values from a finite set. By encoding matrix indices as Boolean variables, an MTBDD represents an entire integer-valued matrix. Retaining the strict variable ordering and reduction rules of an ROBDD yields a compressed, canonical representation.
+
+\begin{definition}
+    A multi-terminal binary decision diagram is a rooted, directed acyclic graph representing a function $f: \{0, 1\}^n \to S$, where $S$ is an arbitrary finite set. It extends the conventional binary decision diagram by allowing terminal nodes to take values from $S$ instead of being restricted to $\{0, 1\}$.
+\end{definition}

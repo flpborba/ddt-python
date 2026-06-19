@@ -1,0 +1,33 @@
+\begin{table}
+\caption{Comparison between the number of cells in the standard DDT and the number of states and transitions in the proposed automaton representation.}
+    \label{tab:compression_results}
+
+    \centering
+    \setlength{\tabcolsep}{6pt}
+
+    \begin{tabular}{lrrrr}
+        \hline
+        
+        \textbf{Cipher} & $n$ & \textbf{Cells} & \textbf{States} & \textbf{Transitions} \\
+        
+        \hline
+
+        SEA & 3 & 64 & 8 & 12 \\
+        SKINNY-64 & 4 & 256 & 36 & 63 \\
+        PRESENT & 4 & 256 & 38 & 89 \\
+        PRINCE & 4 & 256 & 47 & 106 \\
+        DryGASCON128 & 5 & 1,024 & 96 & 225 \\
+        Ascon & 5 & 1,024 & 106 & 256 \\
+        Dillon & 6 & 4,096 & 356 & 1,188 \\
+        WAGE & 7 & 16,384 & 1,516 & 4,965 \\
+        SKINNY-128 & 8 & 65,536 & 922 & 2,334 \\
+        Camellia & 8 & 65,536 & 5,388 & 19,096 \\
+        AES & 8 & 65,536 & 5,393 & 19,106 \\
+        CLEFIA ($S_{0}$) & 8 & 65,536 & 5,631 & 19,203 \\
+        Skipjack & 8 & 65,536 & 5,652 & 19,359 \\
+        Safer & 8 & 65,536 & 5,655 & 18,535 \\
+        DryGASCON256 & 9 & 262,144 & 4,739 & 14,049 \\
+        
+        \hline
+    \end{tabular}
+\end{table}

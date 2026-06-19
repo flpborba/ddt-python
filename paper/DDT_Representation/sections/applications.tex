@@ -1,0 +1,237 @@
+\section{Applications}
+\label{sec:applications}
+
+\subsection{Calculating differential properties}
+
+The proposed representation of the difference distribution table allows for the efficient computation of cryptographic metrics without the need to exhaustively generate the standard tabular format. In the following, we demonstrate how each of the differential properties introduced previously can be calculated using this data structure.
+
+To calculate the differential uniformity, it is sufficient to inspect the values stored at the terminal nodes of the data structure. Let $T$ be the set of all terminal nodes. Since the differential uniformity is the maximum frequency of any non-trivial differential, it corresponds directly to the maximum integer value among these nodes. Finding this maximum requires a simple traversal, which takes $\mathcal{O}(|T|)$ time. Since the number of terminal nodes is at most $\Delta_{F}$, the cost is negligible compared to the size of the original DDT.
+
+To compute the differential spectrum, we traverse the automaton starting from the root using a standard search algorithm, such as depth-first search. During the traversal, we track the multiplicity of the current path by multiplying the number of valid transition symbols along each traversed edge. When a terminal node storing a value $i$ is reached, the accumulated path weight is added to the corresponding counter $\omega_i$. This approach requires $\mathcal{O}(D)$ memory, where $D$ is the depth of the automaton and is bounded by the input size $n$. The time complexity is $\mathcal{O}(P)$, where $P$ is the total number of distinct valid paths in the reduced structure.
+
+Impossible differentials, which correspond to zero-entries in the difference distribution table, can also be efficiently extracted from the data structure. To determine if a differential $(a, b)$ is impossible, it suffices to evaluate its encoding, where symbols are formed by the respective bits of $a$ and $b$. That is, if $a = 101$ and $b = 011$, the encoding of the differential $(a, b)$ is the symbol sequence $213$, since the bit pairs from most to least significant are $(1,0)$, $(0,1)$, and $(1,1)$. Since the automaton only accepts non-zero entries, the differential is impossible if and only if its encoding is not in $L(DDT)$. However, for verifying a single specific differential, this traversal is not computationally advantageous compared to a standard DDT. While a direct table lookup operates in $\mathcal{O}(1)$ time, evaluating through the automaton requires $\mathcal{O}(D)$ operations. While this overhead makes the automaton less efficient than a DDT for single-point evaluations, the $\mathcal{O}(D)$ cost remains bounded by the input size $n$ and may not represent a concern. Next, we present methods for performing more complex queries on the automaton, enabling the simultaneous extraction of multiple impossible differentials and other properties.
+
+\subsection{Complex Queries via Automata Operations}
+\label{sec:queries}
+
+The transformation of the DDT into a finite automaton establishes a formal
+language containing the data in the table. By treating the set of valid
+differentials as a language, complex cryptanalytic queries can be
+formulated as regular expressions and resolved as operations on this
+language. This transforms the ad-hoc process of searching for specific
+differential properties into an automated, language-theoretic problem.
+Formally, the query process follows these steps:
+\begin{enumerate}
+    \item The query is formulated as a regular expression $R$ over the
+          alphabet $\Sigma$.
+    \item The regular expression $R$ is compiled into a finite automaton
+          $Q$.
+    \item The intersection of $D$ and $Q$ is computed using methods such
+          as topological dynamic programming with bit-parallelism or lazy
+          depth-first search.
+    \item The resulting intersection language is then enumerated, yielding
+          the set of DDT entries that satisfy the properties specified by
+          the regular expression $R$.
+\end{enumerate}
+
+This formal language approach provides a highly flexible mechanism. Rather
+than developing custom algorithms for specific search criteria, an analyst
+simply constructs the appropriate regular expression. Moreover, because
+the class of regular languages is closed under union, intersection, and
+complement, complex queries can be assembled compositionally from simpler
+ones without leaving the framework. The same query automata can be combined
+with the complement of $D$ to reason about impossible differentials, with a
+value-restricted sub-automaton of $D$ to filter by probability, or with each
+other to express conjunctive constraints.
+
+Throughout the rest of this section, we write the input difference as
+$a = a_{n-1}\cdots a_0$ and the output difference as $b = b_{n-1}\cdots
+b_0$. Following the encoding of Section~3, each symbol of the word
+representing $(a,b)$ is built from a pair of bits $(a_i, b_i)$, so the
+four symbols partition naturally into two pairs: symbols
+$\{\texttt{0},\texttt{2}\}$ correspond to $a_i = 0$ (input bit
+inactive) and symbols $\{\texttt{1},\texttt{3}\}$ to $a_i = 1$ (input
+bit active), while symbols $\{\texttt{0},\texttt{1}\}$ correspond to
+$b_i = 0$ (output bit inactive) and symbols $\{\texttt{2},\texttt{3}\}$
+to $b_i = 1$ (output bit active). For brevity, we display regular
+expressions in typewriter font and adopt the usual convention that the
+dot \texttt{.} matches any symbol of $\Sigma$, that is, \texttt{.}
+$\equiv$ \texttt{(0|1|2|3)}. To illustrate the practical utility of
+this method, the following examples demonstrate how common queries can
+be formulated for a DDT of size $2^n$.
+
+\begin{itemize}
+    \item Fixed input differences: To identify all possible output
+          differences for a specific $n$-bit input difference
+          $a = \texttt{0101}$, the regular expression is formulated as
+          \[
+              R = \texttt{(0|2)(1|3)(0|2)(1|3)}.
+          \]
+          This query replaces the conventional $O(2^n)$ row scan required
+          in a standard DDT. Furthermore, it can be reused for other
+          values of $a$ by simply changing the transition symbols in the
+          query automaton.
+
+    \item Partial and truncated differentials: To evaluate a truncated
+          differential where only the two most significant input bits are
+          fixed to $\texttt{10}$, the regular expression is formulated as
+          \[
+              R = \texttt{(1|3)(0|2)..}
+          \]
+          More generally, any pattern in $\{0,1,*\}^{n}$ on input bits and
+          $\{0,1,*\}^{n}$ on output bits maps to a length-$n$ regular
+          expression with at most four alternatives per position, so that
+          any truncated query of arbitrary mask shape compiles into an
+          automaton of $O(n)$ states. The special case in which each
+          position is constrained only to be active or inactive (rather
+          than fixed to a specific bit value) recovers the activity
+          patterns that underlie the MILP- and SAT-based active-S-box
+          counts of Mouha et al.~\cite{MouhaEtAl2012} and the differential and linear
+          bounds of ciphers such as SKINNY~\cite{BeierleEtAl2016}.
+
+    \item Impossible differentials: Impossible differentials are precisely
+          the words rejected by $D$. Rather than testing individual pairs
+          $(a,b)$, the framework exposes the entire impossible language
+          as the complement
+          \[
+              L(I) = \overline{L(D)} \cap \Sigma^{n},
+          \]
+          which is recognized by the complement automaton $\overline{D}$.
+          For instance, to enumerate all impossible differentials of a
+          $4$-bit S-box whose input has only the least significant bit
+          active ($a = \texttt{0001}$, $b$ unconstrained), the regular
+          expression is
+          \[
+              R = \texttt{(0|2)(0|2)(0|2)(1|3)},
+          \]
+          and the impossible cells of that row are read from
+          $\overline{L(D)} \cap L(R)$. This is the elementary
+          building block of impossible-differential cryptanalysis as
+          first applied to Skipjack~\cite{BihamEtAl1999} and DEAL~\cite{Knudsen1998}, where one
+          routinely needs the full set of zero-entries that respect a
+          given activity pattern.
+
+    \item Extremal-probability differentials: Because the reduced
+          automaton stores the differential multiplicity directly on
+          each accepting state, filtering by probability does not
+          require any path enumeration: it is a one-pass scan of the
+          state set. Let $D_{\geq \tau}$ denote the sub-automaton
+          obtained from $D$ by retaining only the accepting states
+          whose stored value is at least $\tau$ and pruning unreachable
+          states. Then $L(D_{\geq \tau})$ is the set of differentials
+          with probability at least $\tau \cdot 2^{-n}$, and the
+          differentials achieving the differential uniformity
+          $\Delta(F)$ are obtained by setting $\tau = \Delta(F)$. For
+          the PRESENT S-box~\cite{BogdanovEtAl2007}, where $n = 4$ and $\Delta = 4$, the
+          language $L(D_{\geq 4})$ enumerates the handful of
+          high-probability transitions that anchor the best known
+          characteristics of the cipher; choosing $\tau = 2$ instead
+          returns every non-trivial valid transition that is available
+          to a trail. This is exactly the seed information consumed by
+          branch-and-bound differential trail searches such as
+          Matsui's~\cite{Matsui1995} and its modern MILP and SAT descendants. The
+          construction of $D_{\geq \tau}$ visits each accepting state
+          at most once, so it runs in $O(|S|)$ time independently of
+          the size of the resulting language.
+
+    \item Hamming-weight bounded differentials: Many design strategies and
+          search heuristics rely on input and output differences of low
+          Hamming weight, since these often dominate the best multi-round
+          trails. The set of words encoding differentials with
+          $\mathrm{wt}(a) + \mathrm{wt}(b) \leq w$ is recognized by a
+          counter automaton with $O(n\,w)$ states: at each position, the
+          automaton increments its weight counter by $0$, $1$, or $2$
+          depending on whether the symbol is $\texttt{0}$, in
+          $\{\texttt{1},\texttt{2}\}$, or $\texttt{3}$.
+          For example, restricting to single-bit input and output
+          ($\mathrm{wt}(a) = \mathrm{wt}(b) = 1$) is recognized by the
+          regular expression
+          \[
+              R = \texttt{0}^{*}\texttt{2}\,\texttt{0}^{*}\texttt{1}\,\texttt{0}^{*}\;|\;
+                  \texttt{0}^{*}\texttt{1}\,\texttt{0}^{*}\texttt{2}\,\texttt{0}^{*}\;|\;
+                  \texttt{0}^{*}\texttt{3}\,\texttt{0}^{*},
+          \]
+          and its intersection with $D$ enumerates the differentials
+          targeted by single-bit and bit-flip distinguishers.
+          Intersecting more general counter automata with $D$ supports
+          the wide-trail strategy of Daemen and Rijmen~\cite{DaemenRijmen2002}, in which
+          the designer must verify that no low-weight differential of a
+          chosen S-box falls below the targeted probability threshold.
+
+    \item Linearly constrained differentials: Linear relations on the
+          bits of $(a,b)$ arise naturally when an S-box is embedded in
+          a larger primitive. In a multi-round setting, the linear
+          layer that follows a round of S-boxes constrains how the
+          output differences of one round map to the input differences
+          of the next, which translates, after fixing the surrounding
+          differences, into a linear constraint on each S-box's local
+          $(a,b)$. The simplest such constraint is the diagonal
+          relation $a = b$, which is recognized by the regular
+          expression
+          \[
+              R = \texttt{(0|3)}^{n},
+          \]
+          since symbols $\texttt{0}$ and $\texttt{3}$ are exactly those
+          with $a_i = b_i$.
+          More generally, any $\mathbb{F}_{2}$-linear relation on the
+          bits of $(a,b)$ is recognized by a deterministic automaton
+          whose states track the running parities of the relation, with
+          at most $2^{r}$ states for $r$ independent linear constraints.
+          Intersecting such an automaton with $D$ extracts exactly the
+          DDT entries that are compatible with the linear context, a
+          search that traditionally requires either bespoke filters or
+          auxiliary MILP or SAT formulations.
+
+    \item Composite queries: Because regular languages are closed under
+          boolean operations, the previous queries can be combined freely.
+          A concrete example is the search for high-probability
+          low-weight differentials, formulated as the intersection
+          \[
+              L(D_{\geq \Delta(F)/2}) \cap L(\mathrm{wt} \leq 2),
+          \]
+          which is precisely the kind of seed used by trail-search
+          heuristics for ciphers such as PRESENT~\cite{BogdanovEtAl2007} and SKINNY~\cite{BeierleEtAl2016},
+          where only differentials that are both probable enough to
+          contribute and sparse enough to survive the diffusion layer
+          need to be retained. Other useful combinations include the
+          intersection of $\overline{D}$ with a truncated query, which
+          enumerates activity patterns guaranteed to vanish across one
+          S-box layer, and the intersection of a linear-constraint
+          automaton with a truncated query, which filters
+          the differentials that survive a linear layer while
+          respecting a required activity pattern. Each compound query
+          is built by a single automata product and inherits the same
+          enumeration and counting primitives as the elementary ones.
+
+    \item Comparing two DDTs: The framework also supports queries that
+          span two S-boxes. Given automata $D_F$ and $D_G$ for the DDTs
+          of $F$ and $G$, the language $L(D_F) \setminus L(D_G)$
+          collects the differentials that are possible for $F$ but
+          impossible for $G$, and $L(D_F) \cap L(D_G)$ collects those
+          shared by both. Such operations are useful for comparing
+          candidate S-boxes during the design of a cipher: members of
+          the same affine-equivalence class share the same DDT up to a
+          relabelling of inputs and outputs, so $L(D_F) \setminus
+          L(D_G)$ provides a direct certificate of inequivalence,
+          while comparing two candidates from different equivalence
+          classes (a situation that arises, for example, in the S-box
+          selection of lightweight ciphers such as PRINCE~\cite{BorghoffEtAl2012} and
+          Midori~\cite{BanikEtAl2015}) isolates the differentials that distinguish
+          their behaviour under a fixed differential property of
+          interest.
+\end{itemize}
+
+For all of the queries above, the running time is dominated by the size
+of the intersection language, which is bounded by $|D| \cdot |Q|$ in the
+worst case, but is usually much smaller in practice because most query
+automata are sparse and length-deterministic. The intersection is not
+materialized explicitly; following the workflow at the start of this
+section, it is computed by a joint traversal of $D$ and $Q$ (lazy
+depth-first search) or by a topological dynamic program with
+bit-parallelism over the two automata. Critically, no query above visits
+the dense $2^{n} \times 2^{n}$ matrix, even implicitly: the only objects
+touched are the already-compressed automaton $D$ and the small query
+automaton $Q$, so the asymptotic memory savings of Section~4 carry over
+to query time. This makes the representation particularly attractive
+for cryptanalytic workflows that revisit the DDT many times under
+varying constraints.

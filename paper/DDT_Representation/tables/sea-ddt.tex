@@ -1,0 +1,20 @@
+\begin{table}[!ht]
+    \label{tbl:sea-ddt}
+    \caption{DDT for the 3-bit S-box used in the SEA cipher.}
+    
+    \centering
+    \scriptsize
+    \renewcommand{\arraystretch}{1.5}
+
+    \begin{tabular}{c|*{8}{C{0.04\textwidth}}}
+        \diagbox{\phantom{X}$\alpha$}{$\beta$\phantom{X}} & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111 \\ \hline
+        000 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+        001 & 0 & 2 & 0 & 2 & 0 & 2 & 0 & 2 \\
+        010 & 0 & 2 & 2 & 0 & 0 & 2 & 2 & 0 \\
+        011 & 0 & 0 & 2 & 2 & 0 & 0 & 2 & 2 \\
+        100 & 0 & 0 & 0 & 0 & 2 & 2 & 2 & 2 \\
+        101 & 0 & 2 & 0 & 2 & 2 & 0 & 2 & 0 \\
+        110 & 0 & 2 & 2 & 0 & 2 & 0 & 0 & 2 \\
+        111 & 0 & 0 & 2 & 2 & 2 & 2 & 0 & 0 \\
+    \end{tabular}
+\end{table}
