@@ -33,8 +33,11 @@ Differential cryptanalysis, introduced by Biham and Shamir, centers on the
 difference distribution table (DDT) of an S-box. For an $n$-bit S-box the table
 is a dense $2^{n}\times 2^{n}$ matrix, and even when it fits in memory the
 cryptanalytic tasks performed over it are each implemented as an ad-hoc scan,
-written anew for every analysis. We argue that the right abstraction for the
-DDT is not a matrix but a formal language: by recursively partitioning the table
+written anew for every analysis. Other approaches encode the DDT into a generic
+solver (MILP, SAT) for a specific analysis, or compress it with generic
+sparse-matrix data structures for storage; none offers a uniform, queryable
+representation of the table itself. We argue that the right abstraction for the DDT is not a matrix but
+a formal language: by recursively partitioning the table
 into quadrants, every cell is identified with a unique word over a quaternary
 alphabet $\Sigma = \{\texttt{0},\texttt{1},\texttt{2},\texttt{3}\}$, the non-zero entries form a
 regular language $L(D)$, and a quaternary analogue of multi-terminal binary
@@ -48,7 +51,7 @@ and calculus apply verbatim to the linear approximation and boomerang
 connectivity tables, unifying differential, linear, and boomerang queries under
 a single engine. The representation is also compact: evaluated on the entire
 SageMath S-box library, $288$ S-boxes from $n=3$ to $9$ with every automaton
-verified cell-by-cell against the dense table, it is competitive with
+verified cell-by-cell against the dense table, it stays within a small factor of
 sparse-bitmap encodings on unstructured S-boxes and improves on them by up to
 an order of magnitude on highly structured ones, exactly the cases where
 queries are most valuable.
@@ -71,18 +74,18 @@ the difference distribution table of the cipher's nonlinear components, which
 records the frequency with which each output difference is produced by each input
 difference.
 
-The size of this table is also its main limitation. For an $n$-bit S-box, the DDT
+The size of this table is one obstacle to working with it. For an $n$-bit S-box, the DDT
 is a $2^{n}\times 2^{n}$ integer matrix, and its exponential growth in $n$ rapidly
 exhausts memory budgets. An $8$-bit S-box already requires $64$~KiB; beyond
-$n\approx 15$--$16$ the dense matrix can no longer be materialised on commodity
+$n\approx 15$--$16$ the dense matrix can no longer be materialized on commodity
 machines. As cryptanalysts increasingly turn their attention to larger S-boxes,
 ARX components, and word-oriented permutations, this cost forces a recurring
 compromise between the expressiveness of differential analysis and the size of
-the primitives that can actually be analysed.
+the primitives that can actually be analyzed.
 
 Compounding this storage problem is a more subtle access problem. Even when a DDT
 fits in memory, most cryptanalytic tasks do not need every cell at once: they need
-to extract the small subset of entries that satisfy some structural property.
+to extract the small subset of entries that satisfy some criteria.
 Examples are pervasive in the literature, including enumerating all impossible
 differentials of an S-box, listing every $(a,b)$ that achieves the differential
 uniformity, isolating truncated differentials in which only a few input bits are
@@ -96,25 +99,26 @@ In this paper, we argue that the right abstraction for the DDT is not a matrix b
 a formal language. By recursively partitioning the table into quadrants, every
 cell is identified with a unique word over a quaternary alphabet, and the set of
 words that correspond to non-zero entries forms a regular language $L(D)$. This
-language is recognised by a finite automaton whose terminal states carry the
+language is recognized by a finite automaton whose terminal states carry the
 differential multiplicities, and whose structure is canonical once a quaternary
 analogue of multi-terminal binary decision diagram reduction is applied. The
-resulting representation exploits both the general redundancy present in every
-DDT, such as the abundance of zero entries, and the specific redundancy resulting
-from the algebraic and combinatorial structure of typical S-boxes.
+resulting representation exposes the structural regularities of the table:
+both the abundance of zero entries common to every S-box DDT and its
+specific algebraic redundancies in a form that the query calculus in
+Section~\ref{sec:applications} can act on directly.
 
 The compactness of this representation is, however, only one half of the
 contribution. The other half, and the focus of this work, is the querying
 capability that the language-theoretic view unlocks. Once the DDT is encoded as a
 regular language, any subset of entries definable by a regular condition over the
-alphabet $\Sig=\{0,1,2,3\}$ becomes a regular language in its own right, and can
+alphabet $\Sigma = \{\texttt{0},\texttt{1},\texttt{2},\texttt{3}\}$ becomes a regular language in its own right, and can
 be intersected with $L(D)$ using standard automata-theoretic constructions. The
 disparate ad-hoc scans listed above all collapse into a single uniform recipe:
 write the property as a regular expression, compile it into a query automaton,
 intersect with the DDT automaton, and enumerate the resulting language. Truncated
 differentials, impossible differentials, fixed-bit differentials, entries of
 extremal probability, and many other targets that have historically required
-specialised code are recovered as one-line queries. Importantly, this also lifts
+specialized code are recovered as one-line queries. Importantly, this also lifts
 queries from a per-cell cost to a cost proportional to the size of the (already
 compressed) intersection automaton, so the dense matrix never has to be
 enumerated even implicitly.
@@ -130,7 +134,7 @@ construction is specific to the DDT, and show that the linear approximation tabl
 (LAT) and boomerang connectivity table (BCT) are represented and queried by the
 same machinery, placing differential, linear, and boomerang analysis on a common
 footing (Section~\ref{sec:beyond}). Section~\ref{sec:conclusion} concludes. A
-self-checking artifact reproduces every measurement.\footnote{Artifact anonymised
+self-checking artifact reproduces every measurement.\footnote{Artifact anonymized
 for review.}
 
 \section{Preliminaries}
@@ -163,6 +167,11 @@ probability and is therefore kept small by design.
 $\Delta(F)=\max_{a\neq 0,\,b\in\F_2^{m}}\DDT_F[a,b]$.
 \end{definition}
 
+Designs optimized exclusively for low uniformity often acquire strong algebraic
+structure, and such structure has itself been exploited in algebraic and
+higher-order attacks; for that reason, several cryptanalytic tasks need
+information beyond the single maximum, captured by the differential spectrum.
+
 \begin{definition}[Differential spectrum]
 The differential spectrum of $F$ is the multiset $\{\DDT_F[a,b]:a\neq 0\}$; we
 write $\omega_i$ for the number of non-trivial pairs $(a,b)$ with
@@ -177,7 +186,7 @@ it carries no cryptanalytic information, and removing it increases the sparsity 
 the table.
 
 Two further tables, defined here for use in Section~\ref{sec:beyond}, record the
-behaviour of $F$ under the other two main attack families. The linear
+behavior of $F$ under the other two main attack families. The linear
 approximation table~\cite{matsuilc} $\LAT_F[a,b]=|\{x:a\cdot x=b\cdot
 F(x)\}|-2^{n-1}$ collects the correlations of linear approximations, with $\cdot$
 the inner product over $\F_2$; its largest off-origin magnitude is the linearity.
@@ -185,38 +194,43 @@ For a permutation $F$, the boomerang connectivity table~\cite{bct}
 $\BCT_F[a,b]=|\{x:F^{-1}(F(x)+b)+F^{-1}(F(x+a)+b)=a\}|$ makes the boomerang
 switch~\cite{wagner} exact, and its boomerang uniformity is
 $\beta(F)=\max_{a,b\neq 0}\BCT_F[a,b]$. All three are square integer matrices
-indexed by $(a,b)$; they differ only in how a cell is computed.
+indexed by $(a,b)$; they differ only in how a cell is computed. This uniformity
+of shape is what will let our construction apply to each of them without change.
 
 \subsection{Finite automata and decision diagrams}
 
+Two classical structures underlie what follows: deterministic finite automata,
+which provide a query language, and decision diagrams, which provide a canonical
+compact form. We recall both here in the minimal form we need.
+
 A deterministic finite automaton (DFA) over an alphabet $\Sig$ is a tuple
 $(Q,\Sig,\delta,q_0,A)$ with transition function $\delta:Q\times\Sig\to Q$,
-initial state $q_0$, and accepting set $A$, recognising the regular language
+initial state $q_0$, and accepting set $A$, recognizing the regular language
 $L=\{w:\delta^{*}(q_0,w)\in A\}$. Regular languages are closed under union,
-intersection, and complement; intersection is realised by the product
+intersection, and complement; intersection is realized by the product
 construction, whose reachable part is what a joint traversal explores.
 
 A binary decision diagram (BDD)~\cite{lee,akers} is a rooted directed acyclic
-graph whose internal nodes are labelled by a variable and have two children;
+graph whose internal nodes are labeled by a variable and have two children;
 evaluation follows the \texttt{low} or \texttt{high} child according to the bit
 read. Bryant~\cite{bryant} showed that fixing a total variable order and applying
-two reduction rules---merge isomorphic subgraphs, and delete a node whose children
-coincide---yields the reduced ordered BDD, which is canonical and minimal. A
+two reduction rules, merge isomorphic subgraphs and delete a node whose children
+coincide, yields the reduced ordered BDD, which is canonical and minimal. A
 multi-terminal BDD (MTBDD)~\cite{mtbdd} relaxes the terminals from $\{0,1\}$ to an
 arbitrary finite set, so that an integer-valued matrix indexed by Boolean
 variables is represented by a single canonical diagram. The correspondence between
 such diagrams and automata is classical~\cite{kimura}; it is what lets us treat
-the diagram as a language recogniser.
+the diagram as a language recognizer.
 
 \section{An Automaton-Theoretic Representation of DDTs}
 \label{sec:auto}
 
 We propose a DDT representation based on automata theory, resting on the
 hypothesis that the derivatives of the functions used as S-boxes in real ciphers
-are not random, but possess significant structural regularities that can be
-exploited for compression. We first identify the redundancy that a dense matrix
-fails to exploit, then describe the construction of the automaton and its
-reduction.
+are not random, but possess significant structural regularities that the
+automaton view can both compress and query. We first identify the redundancy
+that a dense matrix fails to exploit, then describe the construction of the
+automaton and its reduction.
 
 \subsection{Structural redundancy in DDTs}
 \label{sec:redundancy}
@@ -231,12 +245,13 @@ second is the \emph{specific} redundancy induced by the structure of the S-box,
 which manifests as the frequent repetition of small identical blocks throughout
 the table.
 
-This specific redundancy is already visible in the DDT of the PRESENT S-box, shown
+This specific redundancy is already visible in the DDT of the PRESENT
+S-box~\cite{present}, shown
 in Table~\ref{tab:present}. Here the table is partitioned into $2\times 2$ blocks
 and each block is shaded by how often its pattern occurs, with more frequent
-patterns darker. Although the $64$ blocks could in principle realise a great many
-distinct patterns, $25$ of them fall into just three patterns---the all-zero
-block alone occurs $11$ times---and only $16$ distinct block patterns appear in
+patterns darker. Although the $64$ blocks could in principle realize a great many
+distinct patterns, $25$ of them fall into just three patterns, the all-zero
+block alone occurs $11$ times, and only $16$ distinct block patterns appear in
 total. This repetition is precisely what a quadrant-based encoding can share, and
 it is the source of the compression measured in Section~\ref{sec:results}.
 
@@ -257,8 +272,8 @@ To transform a DDT into a finite automaton we employ an encoding used for
 quadtrees and image patterns~\cite{quadtree,patterns}. Let $\Sig=\{0,1,2,3\}$ be a
 quaternary alphabet. The whole matrix is assigned the empty word $\varepsilon$; we
 then partition the $2^{n}\times 2^{n}$ matrix into four equal quadrants and assign
-a distinct symbol of $\Sig$ to each. Applied recursively, a sub-matrix labelled
-$w$ has its four quadrants labelled $w0,w1,w2,w3$ for the top-left, top-right,
+a distinct symbol of $\Sig$ to each. Applied recursively, a sub-matrix labeled
+$w$ has its four quadrants labeled $w0,w1,w2,w3$ for the top-left, top-right,
 bottom-left, and bottom-right quadrant, until single cells are reached and receive
 words of length $n$. The subset of words mapping to non-zero entries is the
 \emph{language of the DDT}, written $L(D)$. Figure~\ref{fig:enc} illustrates the
@@ -310,7 +325,7 @@ sub-quadrants receive length-two words; (c) the highlighted cell encoded as
 \label{fig:enc}
 \end{figure}
 
-Following this structural mapping, $L(D)$ is recognised by a quaternary automaton
+Following this structural mapping, $L(D)$ is recognized by a quaternary automaton
 in which each path from the initial state to a terminal corresponds to a word
 $w\in\Sig^{n}$: internal states are the sub-matrices produced by the recursive
 partition, and transitions are dictated by the symbols of $\Sig$. Unlike a
@@ -320,8 +335,8 @@ a word therefore both decides whether the differential is possible and returns i
 multiplicity.
 
 \paragraph{Reduction.}
-To store the automaton compactly, minimisation is necessary, but classical DFA
-minimisation cannot be applied directly: it would merge accepting states carrying
+To store the automaton compactly, minimization is necessary, but classical DFA
+minimization cannot be applied directly: it would merge accepting states carrying
 different values. Instead we draw on the relationship between automata and
 decision diagrams~\cite{kimura} and on the integer terminals of the
 MTBDD~\cite{mtbdd}, and reduce a quaternary variant of a decision diagram in which
@@ -340,21 +355,20 @@ depths are distinct, and merging them would corrupt evaluation. While the
 resulting automaton is not minimal in the ordinary sense, it is minimal and
 canonical in this ordered, multi-terminal setting, by Bryant's
 argument~\cite{bryant} transported through the diagram--automaton
-correspondence~\cite{kimura}. The final step removes the redundant strings from
-the function table, leaving exactly one entry per distinct value.
+correspondence~\cite{kimura}.
 
 \paragraph{A worked example.}
 To illustrate the construction and its reduction, consider the $3$-bit S-box of
-the SEA cipher, whose DDT is shown in Table~\ref{tab:sea}. Because the S-box is
+the SEA cipher~\cite{sea}, whose DDT is shown in Table~\ref{tab:sea}. Because the S-box is
 APN, its only non-zero value is $2$, and the trivial differential at $(0,0)$ is
 overridden to $0$. The unreduced automaton spells out all $28$ paths to non-zero
 cells. Reduction collapses the repeated structure: at the first level the
 branches on symbols $0$, $1$, and $2$ lead to identically structured
 sub-matrices and are grouped, immediately sparing half the storage, and at the
 terminal level a single accepting state suffices for the value $2$. The reduced
-automaton, shown in Figure~\ref{fig:sea}, has nine states---eight internal and
-accepting states together with the dead terminal---and a function table with the
-single entry $2$. We verified that it reproduces all $64$ cells of the DDT
+automaton has nine states, the dead-state sink at index $0$, the value-$2$ sink
+at index $1$, and seven internal states; in Figure~\ref{fig:sea} the dead sink
+is omitted for clarity. We verified that it reproduces all $64$ cells of the DDT
 exactly.
 
 \begin{table}[t]
@@ -403,7 +417,7 @@ $a\backslash b$ & 000 & 001 & 010 & 011 & 100 & 101 & 110 & 111\\
  \draw (F) edge node[swap] {0,2,3} (T);
  \draw (G) edge[bend right=12] node[swap] {0,1,2} (T);
 \end{tikzpicture}
-\caption{Reduced automaton for the SEA DDT. Edges are labelled by the symbols
+\caption{Reduced automaton for the SEA DDT. Edges are labeled by the symbols
 taking each state to its successor; transitions to the dead state are omitted. The
 double circle is the single accepting state, of value $2$.}
 \label{fig:sea}
@@ -418,17 +432,22 @@ $288$ S-boxes from the literature, all square, with widths from $n=3$ to $9$; of
 these, $283$ are permutations. For each S-box we built the reduced automaton of
 its DDT and verified it cell-by-cell against the dense table computed by Sage,
 so every figure below is backed by an exact round-trip. We store the automaton as
-a contiguous array of states, each with four fields holding the indices of its
-successors; index $0$ is the dead state, accepting states hold the differential
-value in place of successors, and the field width follows the state count. We
-report the \emph{state ratio}, the dense cell count $2^{2n}$ divided by the number
-of automaton states.
+a contiguous array of states, each occupying four fields that hold the indices of
+its successors. The first $\lceil\Delta/2\rceil + 1$ entries are sink states whose
+four fields all point to themselves: index $0$ is the dead state, and index $i$
+(for $1\le i\le\lfloor\Delta/2\rfloor$) is the accepting state for differential
+value $2i$. A traversal that reaches such a sink stays there, so the index alone
+identifies the cell's value and no auxiliary value table is needed. Each pointer
+is bit-packed to $\lceil\log_2|S|\rceil$ bits, the smallest width that can index
+the $|S|$-entry array (internal states and sinks combined). We report the
+\emph{state ratio}, the dense cell count $2^{2n}$ divided by the number of
+automaton states.
 
 \paragraph{Across the library.}
 Table~\ref{tab:agg} aggregates the state ratio by S-box size. Compression is
 present at every width and increases with $n$, as the larger tables offer more
 repeated structure to share. The spread at $n=8$ is wide because the library mixes
-strong AES-like S-boxes with deliberately weak or highly structured ones; we
+strong AES-like~\cite{rijndael} S-boxes with deliberately weak or highly structured ones; we
 return to the extremes below.
 
 \begin{table}[t]
@@ -456,14 +475,10 @@ $n$ & \#S-boxes & DDT & LAT & BCT\\
 Table~\ref{tab:curated} lists a cross-section of well-known S-boxes. The DDT
 compression grows with the differential uniformity: a larger $\Delta$ concentrates
 the entries into fewer distinct values and larger constant blocks, so the
-$\Delta=64$ SKINNY $8$-bit S-box (shared by Romulus, Remus, and ForkSkinny) is
+$\Delta=64$ SKINNY $8$-bit S-box~\cite{skinny} (shared by Romulus, Remus, and ForkSkinny) is
 stored in $915$ states ($71.6\times$), and the deliberately weak CSS S-box
-($\Delta=128$) in only $240$ states ($273\times$). Translated into memory, the
-$64$~KiB AES DDT becomes $42$~KiB, the SKINNY table $7.2$~KiB, and the CSS table
-under $1$~KiB; for the $9$-bit DryGASCON S-box the dense $256$~KiB table is stored
-in $9.4$~KiB. The byte-level gain is most pronounced exactly when the structural
-ratio is, since the field width is otherwise fixed by the state count. The full
-per-S-box results for all $288$ S-boxes accompany the artifact.
+($\Delta=128$) in only $240$ states ($273\times$). The full per-S-box results
+for all $288$ S-boxes accompany the artifact.
 
 \begin{table}[t]
 \centering
@@ -495,6 +510,59 @@ Fantomas       & 8 & 16  & 4556 & 14.4 & 9.1  & 8.5\\
 SKINNY (8-bit) & 8 & 64  & 915  & 71.6 & 23.0 & 29.6\\
 CSS            & 8 & 128 & 240  & 273.1& 69.7 & 125.1\\
 DryGASCON256   & 9 & 128 & 1205 & 217.6& 75.6 & 27.3\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Storage compared to standard baselines.}
+Table~\ref{tab:memory} translates these state counts into bytes and pits the
+automaton against two baselines. \emph{Dense} stores every cell using
+$\lceil\log_2(\Delta+1)\rceil$ bits, the minimum needed for the value range and
+the strongest matrix representation that retains $O(1)$ random access.
+\emph{Bitmap} stores a $2^{2n}$-bit presence map plus, for each nonzero cell, a
+$\lceil\log_2 d\rceil$-bit index into a dictionary of the $d$ distinct values;
+it exploits the abundance of zeros but not the deeper structure of the table.
+The automaton dominates both on highly structured S-boxes, CSS in under
+$1$~KiB against $64$~KiB and $8.6$~KiB, SKINNY-8 in $4.5$~KiB against $56$~KiB
+and $14$~KiB, DryGASCON256 in $6.5$~KiB against $256$~KiB and $45$~KiB, and
+stays within a small factor of bitmap on less structured ones; on AES the
+bitmap is sharper ($12$~KiB versus $34$~KiB), reflecting that the AES DDT has
+many zeros but little subtree sharing to exploit beyond them. Neither baseline
+supports the query operations of Section~\ref{sec:applications}.
+
+\begin{table}[t]
+\centering
+\caption{Memory footprint of the bit-packed automaton against two matrix
+baselines, on the same S-boxes as Table~\ref{tab:curated}. \emph{Dense} is the
+bit-packed value-range minimum, $\lceil\log_2(\Delta+1)\rceil$ bits per cell;
+\emph{bitmap} is a $2^{2n}$-bit presence map plus a small value dictionary.
+Neither baseline supports queries.}
+\label{tab:memory}
+\small
+\begin{tabular}{l r r r r r}
+\toprule
+S-box & $n$ & $\Delta$ & Autom. & Dense & Bitmap\\
+\midrule
+SEA            & 3 & 2   &     18~B  &     16~B  &     12~B \\
+Noekeon        & 4 & 4   &     75~B  &     96~B  &     45~B \\
+PRESENT        & 4 & 4   &    117~B  &     96~B  &     45~B \\
+SKINNY (4-bit) & 4 & 4   &    105~B  &     96~B  &     45~B \\
+PRINCE         & 4 & 4   &    144~B  &     96~B  &     46~B \\
+GIFT           & 4 & 6   &    141~B  &     96~B  &     58~B \\
+Midori $S_{b0}$& 4 & 4   &    156~B  &     96~B  &     45~B \\
+Ascon          & 5 & 8   &    374~B  &    512~B  &    209~B \\
+Fides (5-bit)  & 5 & 2   &    340~B  &    256~B  &    190~B \\
+APN (6-bit)    & 6 & 2   &  1.6~KiB  &  1.0~KiB  &    746~B \\
+WAGE           & 7 & 8   &  8.1~KiB  &  8.0~KiB  &  3.6~KiB \\
+AES            & 8 & 4   & 34.2~KiB  & 24.0~KiB  & 12.0~KiB \\
+Camellia       & 8 & 4   & 34.2~KiB  & 24.0~KiB  & 12.0~KiB \\
+CLEFIA $S_0$   & 8 & 10  & 35.7~KiB  & 32.0~KiB  & 17.3~KiB \\
+Skipjack       & 8 & 12  & 35.9~KiB  & 32.0~KiB  & 17.6~KiB \\
+Kuznyechik     & 8 & 8   & 35.5~KiB  & 32.0~KiB  & 14.7~KiB \\
+Fantomas       & 8 & 16  & 28.9~KiB  & 40.0~KiB  & 15.7~KiB \\
+SKINNY (8-bit) & 8 & 64  &  4.5~KiB  & 56.0~KiB  & 13.6~KiB \\
+CSS            & 8 & 128 &  0.9~KiB  & 64.0~KiB  &  8.6~KiB \\
+DryGASCON256   & 9 & 128 &  6.5~KiB  &   256~KiB & 44.6~KiB \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -544,7 +612,7 @@ encoding~\eqref{eq:enc}, and let \re{.} abbreviate $(0|1|2|3)$.
   fixed input $a=0101$, constrain each position to the corresponding input bit and
   leave the output free, giving $R=\re{(0|1)(2|3)(0|1)(2|3)}$ (positions with
   $a_i=0$ use $\{0,1\}$, those with $a_i=1$ use $\{2,3\}$). This replaces the
-  $O(2^{n})$ row scan and is reused for other $a$ by relabelling.
+  $O(2^{n})$ row scan and is reused for other $a$ by relabeling.
 \item[Truncated differentials.] To require only that the two most significant
   input bits be active, $R=\re{(2|3)(2|3)..}$. Any mask in $\{0,1,*\}$ on the
   input and output bits compiles to an automaton of $O(n)$ states; the
@@ -568,7 +636,8 @@ encoding~\eqref{eq:enc}, and let \re{.} abbreviate $(0|1|2|3)$.
   are accepted by a counter automaton of $O(nw)$ states that adds each symbol's
   popcount ($0$ for \re{0}, $1$ for \re{1} and \re{2}, $2$ for \re{3}).
   Single-bit-in, single-bit-out is
-  $R=\re{0*2 0*1 0*}\mid\re{0*1 0*2 0*}\mid\re{0*3 0*}$, supporting the wide-trail
+  $R=\re{0}^{*}\re{2}\,\re{0}^{*}\re{1}\,\re{0}^{*}\;|\;\re{0}^{*}\re{1}\,\re{0}^{*}\re{2}\,\re{0}^{*}\;|\;\re{0}^{*}\re{3}\,\re{0}^{*}$,
+  supporting the wide-trail
   verification of Daemen and Rijmen~\cite{rijndael}.
 \item[Linearly constrained differentials.] The diagonal relation $a=b$ is
   $R=\re{(0|3)}^{n}$, since $\sigma\in\{0,3\}$ exactly when $a_i=b_i$; any
@@ -579,13 +648,13 @@ encoding~\eqref{eq:enc}, and let \re{.} abbreviate $(0|1|2|3)$.
   high-probability low-weight differentials are
   $L(D_{\ge\Delta/2})\cap L(\wt\le w)$, a single product. Queries also span two
   S-boxes: given $D_F$ and $D_G$, the language $L(D_F)\setminus L(D_G)$ collects
-  the differentials possible for $F$ but impossible for $G$---a certificate of
+  the differentials possible for $F$ but impossible for $G$, a certificate of
   inequivalence useful when comparing candidate S-boxes during design.
 \end{description}
 
 For every query the running time is dominated by the size of the intersection,
 bounded by $|D|\cdot|Q|$ but usually far smaller, and the intersection is never
-materialised: a joint traversal touches only the compressed automaton and the
+materialized: a joint traversal touches only the compressed automaton and the
 small query automaton, so the memory savings of Section~\ref{sec:results} carry
 over to query time.
 
@@ -637,23 +706,23 @@ PRESENT S-box admits no non-trivial differential with at most two active bits.
 Nothing in Section~\ref{sec:auto} is specific to the difference distribution
 table: the construction takes any square integer matrix over the quadrant
 encoding. The linear approximation table and the boomerang connectivity table are
-therefore represented by exactly the same reduced automaton, with no change beyond
-supplying a different matrix. Their state ratios appear alongside the DDT in
+therefore represented by exactly the same reduced automaton; the only change is
+the matrix itself. Their state ratios appear alongside the DDT in
 Tables~\ref{tab:agg} and~\ref{tab:curated}. The LAT compresses less than the DDT,
-because its values span a range---the AES LAT takes $18$ distinct values against
-the DDT's $3$, and the number of terminals bounds the diagram---whereas the BCT,
+because its values span a range, the AES LAT takes $18$ distinct values against
+the DDT's $3$, and the number of terminals bounds the diagram, whereas the BCT,
 with a small value set, compresses essentially like the DDT.
 
-The query calculus generalises in the same way, turning linear and boomerang
+The query calculus generalizes in the same way, turning linear and boomerang
 questions into the same primitive. High-bias linear approximations, which drive
 Matsui's attack~\cite{matsuilc}, are the magnitude filter $|\LAT_F[a,b]|\ge\tau$
 on the LAT automaton, with $\tau$ the linearity selecting the best approximations.
-Boomerang-uniformity cells, the differences that maximise the boomerang
+Boomerang-uniformity cells, the differences that maximize the boomerang
 switch~\cite{wagner,bct}, are the value filter $\BCT_F[a,b]=\beta(F)$ on the BCT
 automaton. We validated both on the PRESENT and AES tables against an exhaustive
 scan (Table~\ref{tab:latbct}); as with the extremal DDT query, these are global
 value filters and so scan their table automaton, which is nonetheless far smaller
-than---and is built without---the dense matrix. The upshot is that a single
+than, and is built without, the dense matrix. The upshot is that a single
 automaton type and a single query engine serve differential, linear, and boomerang
 cryptanalysis, with the property of interest residing entirely in the small query
 automaton.
@@ -690,9 +759,9 @@ $273\times$ for highly structured S-boxes, without any loss of information.
 Beyond the storage gain, the central observation is that the language-theoretic
 view turns the cryptanalytic searches performed over the table into operations on
 automata. The properties that can be phrased as regular conditions over the
-quadrant encoding of $(a,b)$---fixed-input and truncated differentials, impossible
+quadrant encoding of $(a,b)$, fixed-input and truncated differentials, impossible
 differentials, extremal-probability entries, low-weight transitions, linearly
-constrained pairs, and composite or cross-table queries---are all recovered
+constrained pairs, and composite or cross-table queries, are all recovered
 through a single joint traversal of the DDT automaton and a small query automaton,
 and we validated each against exhaustive search. Because the construction is
 agnostic to how a cell is computed, the same machinery serves the linear
@@ -708,8 +777,9 @@ traversal. The same automaton can also serve as a generator of linear inequaliti
 for MILP-based trail search, and quantifying the trade-off between automaton size
 and the number of generated inequalities is left to future work. Finally, the size
 of the reduced automaton appears to capture an intrinsic notion of the structural
-regularity of an S-box, and relating this size-based metric to differential
-properties is a natural analytical follow-up.
+regularity of an S-box, and quantifying the deviation between an actual DDT and
+its random or theoretically optimal counterparts through this size-based metric
+is a natural analytical follow-up.
 
 \begin{thebibliography}{99}
 \bibitem{akers} Akers, S.B.: Binary decision diagrams. IEEE Trans. Comput.
@@ -727,6 +797,9 @@ properties is a natural analytical follow-up.
   vol.\ 1592, pp.\ 12--23. Springer (1999)
 \bibitem{biham} Biham, E., Shamir, A.: Differential cryptanalysis of DES-like
   cryptosystems. J. Cryptology 4, 3--72 (1991)
+\bibitem{present} Bogdanov, A., Knudsen, L.R., Leander, G., Paar, C., Poschmann,
+  A., Robshaw, M.J.B., Seurin, Y., Vikkelsoe, C.: PRESENT: an ultra-lightweight
+  block cipher. In: CHES 2007. LNCS, vol.\ 4727, pp.\ 450--466. Springer (2007)
 \bibitem{bryant} Bryant, R.E.: Graph-based algorithms for Boolean function
   manipulation. IEEE Trans. Comput. C-35(8), 677--691 (1986)
 \bibitem{bct} Cid, C., Huang, T., Peyrin, T., Sasaki, Y., Song, L.: Boomerang
@@ -753,6 +826,9 @@ properties is a natural analytical follow-up.
   vol.\ 7537, pp.\ 57--76. Springer (2012)
 \bibitem{sage} The Sage Developers: SageMath, the Sage Mathematics Software
   System. \url{https://www.sagemath.org} (module \texttt{sage.crypto.sboxes})
+\bibitem{sea} Standaert, F.-X., Piret, G., Gershenfeld, N., Quisquater, J.-J.:
+  SEA: a scalable encryption algorithm for small embedded applications. In:
+  CARDIS 2006. LNCS, vol.\ 3928, pp.\ 222--236. Springer (2006)
 \bibitem{wagner} Wagner, D.: The boomerang attack. In: FSE 1999. LNCS, vol.\ 1636,
   pp.\ 156--170. Springer (1999)
 \end{thebibliography}
