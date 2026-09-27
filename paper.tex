@@ -71,17 +71,7 @@ the difference distribution table of the cipher's nonlinear components, which
 records the frequency with which each output difference is produced by each input
 difference.
 
-The size of this table is one obstacle to working with it. For an $n$-bit S-box, the DDT
-is a $2^{n}\times 2^{n}$ integer matrix, and its exponential growth in $n$ rapidly
-exhausts memory budgets. An $8$-bit S-box already requires $64$~KiB; beyond
-$n\approx 15$--$16$ the dense matrix can no longer be materialized on commodity
-machines. As cryptanalysts increasingly turn their attention to larger S-boxes,
-ARX components, and word-oriented permutations, this cost forces a recurring
-compromise between the expressiveness of differential analysis and the size of
-the primitives that can actually be analyzed.
-
-Compounding this storage problem is a more subtle access problem. Even when a DDT
-fits in memory, most cryptanalytic tasks do not need every cell at once: they need
+Most cryptanalytic tasks do not need every cell at once: they need
 to extract the small subset of entries that satisfy some criteria.
 Examples are pervasive in the literature, including enumerating all impossible
 differentials of an S-box, listing every $(a,b)$ that achieves the differential
@@ -104,9 +94,8 @@ both the abundance of zero entries common to every S-box DDT and its
 specific algebraic redundancies in a form that the query calculus in
 Section~\ref{sec:applications} can act on directly.
 
-The compactness of this representation is, however, only one half of the
-contribution. The other half, and the focus of this work, is the querying
-capability that the language-theoretic view unlocks. Once the DDT is encoded as a
+The focus of this work is the querying capability that the language-theoretic
+view unlocks. Once the DDT is encoded as a
 regular language, any subset of entries definable by a regular condition over the
 alphabet $\Sigma = \{\texttt{0},\texttt{1},\texttt{2},\texttt{3}\}$ becomes a regular language in its own right, and can
 be intersected with $L(D)$ using standard automata-theoretic constructions. The
@@ -116,15 +105,15 @@ intersect with the DDT automaton, and enumerate the resulting language. Truncate
 differentials, impossible differentials, fixed-bit differentials, entries of
 extremal probability, and many other targets that have historically required
 specialized code are recovered as one-line queries. Importantly, this also lifts
-queries from a per-cell cost to a cost proportional to the size of the (already
-compressed) intersection automaton, so the dense matrix never has to be
-enumerated even implicitly.
+queries from a per-cell cost to a cost proportional to the size of the
+intersection automaton, so the dense matrix is never enumerated.
 
 We make three contributions. First, we describe the construction and canonical
 reduction of the DDT automaton (Section~\ref{sec:auto}) and evaluate it on the
 \emph{entire} SageMath S-box library~\cite{Sage2026}, $288$ S-boxes spanning $n=3$ to
-$9$ (Section~\ref{sec:results}); every reported automaton is verified
-cell-by-cell against its dense table. Second, we develop the query calculus and
+$9$, every reported automaton verified cell-by-cell against its dense table, and
+on the $16$-bit FI function of MISTY1, beyond the sizes the library covers
+(Section~\ref{sec:results}). Second, we develop the query calculus and
 validate seven query families against exhaustive search
 (Section~\ref{sec:applications}). Third, we observe that nothing in the
 construction is specific to the DDT, and show that the linear approximation table
@@ -368,9 +357,10 @@ The level qualifier in rule~3 reflects that a node's identity in an ordered diag
 is the pair (variable, children): two nodes with the same children at different
 depths are distinct, and merging them would corrupt evaluation. While the
 resulting automaton is not minimal in the ordinary sense, it is minimal and
-canonical in this ordered, multi-terminal setting, by Bryant's
-argument~\cite{Bryant1986} transported through the diagram--automaton
-correspondence~\cite{KimuraAndClarke1990}.
+canonical for the bit order fixed by Equation~\eqref{eq:enc}, which follows from
+Bryant's argument~\cite{Bryant1986} and the correspondence between diagrams and
+automata~\cite{KimuraAndClarke1990}. A different order induces a different
+partition and may admit a smaller automaton.
 
 \paragraph{A worked example.}
 To illustrate the construction and its reduction, consider the $3$-bit S-box of
@@ -451,7 +441,7 @@ its DDT and verified it cell-by-cell against the dense table computed by Sage. W
 The representation supports the direct computation of standard differential
 metrics from the automaton alone. The differential uniformity is the largest value stored at a terminal, and the terminal set $T$, of size $|T| \le \Delta(F) + 1$, is kept ordered by value, so it is the last entry of the auxiliary array, read in $O(1)$. The differential spectrum is obtained by a depth-first traversal from the root that multiplies the number of valid transition symbols along each edge and, on reaching a terminal of value $i$, adds the accumulated path weight to the counter $\omega_{i}$, in $O(|S|\, |T|)$ time. The differential branch number is the same traversal under a different weight. Weigh each symbol by its Hamming weight and let $f(s)$ be the minimum weight of a path from $s$ to a terminal of nonzero value, with $f=\infty$ at the dead state and $f=0$ at the other terminals. Then $\mathcal{B}(F) = f(q_{0})$, from one memoized pass in $O(|S|)$. The condition $a \ne 0$ needs no encoding, since row zero is cleared before construction, so every word with $a=0$ ends at the dead state.
 
-The spectrum and the branch number are single passes over the automaton, and the uniformity is a single lookup, so the three together cost a fixed number of traversals of $|S|$ states, while each one computed from the table costs a scan of its $2^{2n}$ cells. On AES that is $5393$ states against $65536$ cells, and on the $16$-bit FI function $119\,506\,234$ against $4\,294\,967\,296$ (see Section~\ref{sec:results}). The construction pays the $2^{2n}$ cost once, and every property after that, in addition to the kinds of queries described in the next section, is read off the same object.
+The spectrum and the branch number are single passes over the automaton, and the uniformity is a single lookup, so the three together cost a fixed number of traversals of $|S|$ states, while each one computed from the table costs a scan of its $2^{2n}$ cells. On AES that is $5393$ states against $65536$ cells, and on the $16$-bit FI function $119{,}506{,}234$ against $4{,}294{,}967{,}296$ (see Section~\ref{sec:results}). The construction pays the $2^{2n}$ cost once, and every property after that, in addition to the kinds of queries described in the next section, is read off the same object.
 
 Impossible differentials are exactly the words rejected by the automaton: a differential $(a, b)$ is impossible if and only if its encoding is not in $L(D)$. For a single $(a, b)$ this $O(n)$ evaluation is not advantageous over an $O(1)$ table lookup, but as we now show, the language view pays off precisely when many entries are retrieved at once under a structural constraint.
 
@@ -471,7 +461,7 @@ procedure:
 \end{enumerate}
 Because regular languages are closed under union, intersection, and complement,
 queries compose: the complement $\overline{L(D)}\cap\Sig^{n}$ is the impossible differential
-language, a value-restricted sub-automaton of $D$ filters by probability, and
+language, the values stored at the terminals filter by probability, and
 products of query automata express conjunctions, all without leaving the
 framework. We write $a=a_{n-1}\cdots a_0$ and $b=b_{n-1}\cdots b_0$, use the
 encoding~\eqref{eq:enc}, and let \texttt{.} abbreviate $\texttt{(0|1|2|3)}$.
@@ -494,14 +484,12 @@ encoding~\eqref{eq:enc}, and let \texttt{.} abbreviate $\texttt{(0|1|2|3)}$.
   input bit active, $R=\re{(0|1)(0|1)(0|1)(2|3)}$. This is the elementary step of
   impossible-differential cryptanalysis as first applied to
       Skipjack~\cite{BihamEtAl1999} and DEAL~\cite{Knudsen1998}.
-\item[Extremal-probability differentials.] Because each accepting state stores its
-  value, filtering by probability is a one-pass restriction of $D$: keep only the
-  accepting states with value at least $\tau$ and prune. Then $L(D_{\ge\tau})$ are the
-  differentials of probability at least
-  $\tau\cdot 2^{-n}$, and $\tau=\Delta(F)$ yields
+\item[Extremal-probability differentials.] Each accepting state stores its value,
+  so a threshold $\tau$ selects $L(D_{\ge\tau})$, the differentials of probability
+  at least $\tau\cdot 2^{-n}$, and $\tau=\Delta(F)$ yields
   those attaining the uniformity, the seed of branch-and-bound trail
-  search~\cite{Matsui1995}. The construction visits each accepting state once,
-  $O(|S|)$.
+  search~\cite{Matsui1995}. This constrains the value rather than the word and is
+  resolved by the mechanism described below.
 \item[Hamming-weight bounded differentials.] The words with $\wt(a)+\wt(b)\le w$
   are accepted by a counter automaton of $O(nw)$ states that adds each symbol's
   Hamming weight ($0$ for \re{0}, $1$ for \re{1} and \re{2}, $2$ for \re{3}).
@@ -612,7 +600,7 @@ BCT & value $=\beta$ & AES ($\beta{=}6$)      & 510  & 5459\\
 \section{Storage cost}
 \label{sec:results}
 
-This section measures the representation costs in two ways: the state ratio is the table entry count $2^{2n}$ divided by the number of automaton states and it is independent of how a state is stored. The byte count prices the layout of Section~\ref{sec:auto} where each index in the states array is bit-packed to $\lceil\log_{2}|S|\rceil$ bits, the smallest width that can index the array, giving a total of $|S| \cdot 4 \lceil \log_{2} |S| \rceil + d \cdot w$ bits. We report the ratio across the library, then we report the ratio for some selected ciphers, and finally we compare the storage necessary against two baselines.
+This section measures the representation costs in two ways: the state ratio is the table entry count $2^{2n}$ divided by the number of automaton states and it is independent of how a state is stored. The byte count prices the layout of Section~\ref{sec:auto} where each index in the states array is bit-packed to $\lceil\log_{2}|S|\rceil$ bits, the smallest width that can index the array, giving a total of $|S| \cdot 4 \lceil \log_{2} |S| \rceil + d \cdot w$ bits. We report the ratio across the library, then for a selection of ciphers, and finally we compare the storage necessary against two baselines.
 
 The library stops at $n=9$. To test the construction at a size where the table stops being practical, we implemented the FI function of MISTY1~\cite{rfc2994}, a standardized 16-bit S-box, and built its DDT automaton. In the tables that follow, FI appears as an extra row. We did not build its LAT and BCT, so their respective entries are empty.
 
@@ -644,7 +632,7 @@ $n$ & \#S-boxes & DDT & LAT & BCT\\
 \end{table}
 
 \paragraph{Selected ciphers.}
-Table~\ref{tab:curated} lists a selection of well-known S-boxes with the state count and DDT, LAT and BCT ratios for each. Two factors set the state count. The first is the differential spectrum, whose distinct values fix the number of terminals. The second is where those values fall in the table, which decides how many of the remaining states can be shared. For example, CSS and Safer both have $\Delta=128$, however CSS needs $240$ states and Safer $5653$. Conversely, Noekeon and PRESENT have the same differential spectrum, but $32$ and $39$ states respectively. The full per-S-box results
+Table~\ref{tab:curated} lists a selection of well-known S-boxes with the state count and DDT, LAT and BCT ratios for each. Two factors set the state count. The first is the differential spectrum, whose distinct values fix the number of terminals. The second is where those values fall in the table, which decides how many of the remaining states can be shared. For example, CSS and Safer both have $\Delta=128$, but CSS needs $240$ states and Safer $5{,}653$. Conversely, Noekeon and PRESENT have the same differential spectrum, but $32$ and $39$ states respectively. The full per-S-box results
 for all $288$ S-boxes accompany the artifact.
 
 \begin{table}[h]
@@ -678,27 +666,28 @@ MISTY1 FI   & 16 & 20 & 119,506,234 & 35.9 & --- & ---\\
 \end{table}
 
 \paragraph{Storage comparison.}
-Table~\ref{tab:memory} translates these state counts into bytes and pits the
+Table~\ref{tab:memory} translates these state counts into bytes and compares the
 automaton against two baselines. \emph{Dense} stores every cell using
 $\lceil\log_2(\Delta/2+1)\rceil$ bits, the minimum needed for the value range and
 the strongest matrix representation that retains $O(1)$ random access.
 \emph{Bitmap} stores a $2^{2n}$-bit presence map plus, for each nonzero cell, a
-$\lceil\log_2 d\rceil$-bit index into a dictionary of the $d$ distinct values;
-it exploits the abundance of zeros but not the deeper structure of the table.
-The automaton dominates both on highly structured S-boxes, CSS in under
-$1$~KiB against $56$~KiB and $8.6$~KiB, SKINNY-8 in $4.36$~KiB against $48$~KiB
-and $13.6$~KiB, DryGASCON256 in $6.47$~KiB against $224$~KiB and $44.6$~KiB, and
-stays within a small factor of bitmap on less structured ones; on AES the
-bitmap is sharper ($12$~KiB versus $34.2$~KiB), reflecting that the AES DDT has
-many zeros but little subtree sharing to exploit beyond them. Neither baseline
-supports the query operations of Section~\ref{sec:applications}.
+$\lceil\log_2 d\rceil$-bit index into an array of the $d$ distinct values; it
+exploits the abundance of zeros but not the deeper structure of the table. A
+state costs $4\lceil\log_{2}|S|\rceil$ bits, so the comparison turns on the
+state ratio. The automaton stays within a small factor of the bitmap, at $377$~B against
+$209$~B on Ascon, $34.2$~KiB against $12.0$~KiB on AES and $35.5$~KiB against
+$14.7$~KiB on Kuznyechik. On highly structured S-boxes it is smaller than both:
+CSS in under $1$~KiB against $56$~KiB and $8.6$~KiB, SKINNY-8 in $4.36$~KiB
+against $48$~KiB and $13.6$~KiB, DryGASCON256 in $6.47$~KiB against $224$~KiB
+and $44.6$~KiB. Neither baseline supports the query operations of
+Section~\ref{sec:applications}.
 
 \begin{table}[h]
 \centering
 \caption{Memory footprint of the bit-packed automaton against two matrix
 baselines, on the same S-boxes as Table~\ref{tab:curated}. \emph{Dense} is the
 bit-packed value-range minimum, $\lceil\log_2(\Delta/2+1)\rceil$ bits per cell;
-\emph{bitmap} is a $2^{2n}$-bit presence map plus a small value dictionary.
+\emph{bitmap} is a $2^{2n}$-bit presence map plus a small value array.
 Neither baseline supports queries.}
 \label{tab:memory}
 \small
@@ -718,8 +707,8 @@ Camellia       &  8 & 4   &    34.2~KiB  &         16.0~KiB  & 12.0~KiB \\
 Kuznyechik     &  8 & 8   &    35.5~KiB  &         24.0~KiB  & 14.7~KiB \\
 Skipjack       &  8 & 12  &    35.9~KiB  &         24.0~KiB  & 17.6~KiB \\
 SKINNY (8-bit) &  8 & 64  &    4.36~KiB  &         48.0~KiB  & 13.6~KiB \\
-CSS            &  8 & 128 &    0.94~KiB  &         56.0~KiB  &  8.6~KiB \\
 Safer          &  8 & 128 &    35.9~KiB  &         56.0~KiB  & 19.0~KiB \\
+CSS            &  8 & 128 &    0.94~KiB  &         56.0~KiB  &  8.6~KiB \\
 DryGASCON256   &  9 & 128 &    6.47~KiB  &         224.0~KiB & 44.6~KiB \\
 MISTY1 FI      & 16 &  20 &  1538.6~MiB  &  2048.0~MiB & 1317.5~MiB \\
 \bottomrule
